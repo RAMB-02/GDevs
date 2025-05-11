@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DinoRoarTrigger : MonoBehaviour
@@ -11,14 +12,14 @@ public class DinoRoarTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !hasActivated)
+        if (!hasActivated && other.CompareTag("Player"))
         {
             hasActivated = true;
             StartCoroutine(RoarAfterDelay());
         }
     }
 
-    private System.Collections.IEnumerator RoarAfterDelay()
+    private IEnumerator RoarAfterDelay()
     {
         yield return new WaitForSeconds(delayBeforeRoar);
 
@@ -29,7 +30,8 @@ public class DinoRoarTrigger : MonoBehaviour
 
         if (audioSource != null && roarClip != null)
         {
-            audioSource.PlayOneShot(roarClip);
+            audioSource.clip = roarClip;
+            audioSource.Play();
         }
     }
 }
