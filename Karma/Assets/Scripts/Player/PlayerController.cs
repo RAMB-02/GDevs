@@ -3,6 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    public void ResetVelocity()
+    {
+        velocity = Vector3.zero;
+    }
+
     [Header("Movement Settings")]
     public float walkSpeed = 3.0f;
     public float runSpeed = 6.0f;
