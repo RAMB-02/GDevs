@@ -4,6 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public Monster monster;
+
     [Header("Settings")]
     public Transform spawnPoint;
     public int stage = 1;
@@ -52,13 +54,22 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("Player 오브젝트를 찾지 못했습니다.");
         }
 
-        // anomaly 오브젝트는 초기화만 (값 설정은 이후 단계에서)
+        // ▶ 몬스터 리셋
+        if (monster != null)
+        {
+            monster.ResetToInitialPosition();
+        }
+
         AnomalyManager.Instance.DeactivateAllAnomalies();
     }
+
 
     public void SetRandomAnomalies()
     {
         anomaly = AnomalyManager.Instance.RandomizeAnomalies();
+        Debug.Log("이상현상 수: " + anomaly);
+
+
     }
 
     public void MoveToBackDoor()

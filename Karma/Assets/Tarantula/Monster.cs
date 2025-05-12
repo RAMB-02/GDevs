@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Monster : MonoBehaviour
 {
+    public Transform initialPosition;
     public Transform player;
     private UnityEngine.AI.NavMeshAgent agent;
 
@@ -23,6 +24,8 @@ public class Monster : MonoBehaviour
 
     void Start()
     {
+        transform.rotation = initialPosition.rotation;
+
         audioSource = GetComponent<AudioSource>();
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -92,8 +95,42 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void StartChasing() // ▶ 특정 명령에 의해 추적 시작
+    public void StartChasing()
     {
         isChasing = true;
+
+        // 추적 시작 시 플레이어 방향으로 회전
+        if (player != null)
+        {
+            Vector3 direction = (player.position - transform.position).normalized;
+            direction.y = 0; // 위아래 각도 제거
+            if (direction != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(direction);
+            }
+        }
+    }
+
+
+    public void ResetToInitialPosition()
+    {
+        isChasing = false;
+
+        if (agent.enabled && agent.isOnNavMesh)
+        {
+            agent.isStopped = true;
+            agent.Warp(initialPosition.position);
+        }
+        else
+        {
+            transform.position = initialPosition.position;
+        }
+
+        transform.rotation = initialPosition.rotation; // 회전 복원 추가
+
+        animator.SetBool("isWalking", false);
+        stepTimer = 0f;
+
+        Debug.Log("몬스터 초기화 완료 (위치 + 회전)");
     }
 }
