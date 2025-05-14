@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpiderTrigger : MonoBehaviour
 {
     public Monster monster;
-    public float chaseDuration = 5f; // ← 60초 → 5초로 수정
+    public float chaseDuration = 10f; // ← 60초 → 5초로 수정
     private bool triggered = false;
 
     private void OnEnable()

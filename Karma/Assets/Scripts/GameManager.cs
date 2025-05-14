@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     public void SetRandomAnomalies()
     {
         anomaly = AnomalyManager.Instance.RandomizeAnomalies();
-        Debug.Log("이상현상 수: " + anomaly);
+        Debug.Log("이상현상 수: " + anomaly + "스테이지: " + stage);
 
 
     }

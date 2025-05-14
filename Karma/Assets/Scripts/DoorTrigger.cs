@@ -7,11 +7,18 @@ public class DoorTrigger : MonoBehaviour
 
     private bool playerInRange = false;
 
+    public bool triggerLightsOnEnter = false; // 트리거에 들어갔을 때 조명 조작 여부
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
+
+            if (triggerLightsOnEnter)
+            {
+                LightManager.Instance.SetAnomalyLights(true);
+            }
         }
     }
 
@@ -25,8 +32,11 @@ public class DoorTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange && Input.GetMouseButtonDown(0)) // 좌클릭
+        if (playerInRange && Input.GetMouseButtonDown(0))
         {
+            // 문 이동 전에 조명 상태 복원
+            LightManager.Instance.SetAnomalyLights(false);
+
             if (doorType == DoorType.Back)
                 GameManager.Instance.MoveToBackDoor();
             else

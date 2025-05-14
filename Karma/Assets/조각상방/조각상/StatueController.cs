@@ -4,11 +4,11 @@ public class StatueController : MonoBehaviour
 {
     public Transform player;
     public float moveSpeed = 3f;
-    public float chaseRange = 10f; // ✅ 최대 추적 거리 추가
+    public float chaseRange = 10f;
     public AudioSource moveSound;
 
-    Renderer statueRenderer;
-    Camera playerCamera;
+    private Renderer statueRenderer;
+    private Camera playerCamera;
 
     void Start()
     {
@@ -20,7 +20,6 @@ public class StatueController : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // ✅ 일정 거리 이내일 때만 행동
         if (distanceToPlayer <= chaseRange)
         {
             if (!IsVisibleToCamera())
@@ -35,7 +34,7 @@ public class StatueController : MonoBehaviour
         }
         else
         {
-            PlayMoveSound(false); // 거리가 멀면 소리도 꺼짐
+            PlayMoveSound(false);
         }
     }
 
@@ -61,7 +60,7 @@ public class StatueController : MonoBehaviour
 
     void MoveTowardsPlayer()
     {
-        Vector3 targetPosition = player.position; // y좌표를 고정하지 않음
+        Vector3 targetPosition = player.position;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
         Vector3 direction = (player.position - transform.position).normalized;
@@ -78,5 +77,17 @@ public class StatueController : MonoBehaviour
             moveSound.Play();
         else if (!isMoving && moveSound.isPlaying)
             moveSound.Stop();
+    }
+
+    // ✅ 플레이어와 충돌 시 스테이지 리셋
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("조각상이 플레이어와 충돌했습니다. 스테이지 리셋!");
+            GameManager.Instance.stage = 1;
+            GameManager.Instance.ResetStage();
+            GameManager.Instance.SetRandomAnomalies();
+        }
     }
 }

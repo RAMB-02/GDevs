@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FPSCamera : MonoBehaviour
 {
-    public float mouseSensitivity = 100f; // 마우스 감도
+    public float mouseSensitivity = 80f; // 마우스 감도
     public Transform playerBody;          // 플레이어 몸체 (부모 오브젝트)
 
     private float xRotation = 0f;         // 카메라의 상하 회전값 누적
