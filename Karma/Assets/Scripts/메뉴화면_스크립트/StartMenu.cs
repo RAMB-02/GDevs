@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class StartMenu : MonoBehaviour
 {
-    public SettingsPanelController settingsPanelController; // 인스펙터에서 설정 패널 오브젝트 연결
+    public SettingsPanelController settingsPanelController;
+    public GameObject howToPlayPanel;
 
     void Start()
     {
@@ -20,12 +21,20 @@ public class StartMenu : MonoBehaviour
         {
             settingsPanelController.gameObject.SetActive(false);
         }
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(false);
+        }
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (howToPlayPanel != null && howToPlayPanel.activeInHierarchy)
+            {
+                OnClickCloseHowToPlayPanel();
+            }
             if (settingsPanelController != null && settingsPanelController.gameObject.activeInHierarchy)
             {
                 settingsPanelController.OnClickCloseButton();
@@ -36,30 +45,12 @@ public class StartMenu : MonoBehaviour
     public void OnClickPlay()
     {
         Debug.Log("Play button clicked");
-        StartCoroutine(DelayedLoadScene("IntroScene"));
+        Invoke(nameof(LoadGameScene), 1f); // 1초 후 씬 로드
     }
 
-    public void OnClickExit()
+    void LoadGameScene()
     {
-        Debug.Log("Exit button clicked");
-        StartCoroutine(DelayedExit());
-    }
-
-    private System.Collections.IEnumerator DelayedLoadScene(string sceneName)
-    {
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene(sceneName);
-    }
-
-    private System.Collections.IEnumerator DelayedExit()
-    {
-        yield return new WaitForSeconds(1f);
-        PlayerPrefs.Save();
-        Application.Quit();
-
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
+        SceneManager.LoadScene("IntroScene");
     }
 
     public void OnClickSettings()
@@ -77,6 +68,39 @@ public class StartMenu : MonoBehaviour
 
     public void OnClickHow()
     {
-        Debug.Log("How To Play button clicked - Not implemented yet");
+        Debug.Log("How To Play button clicked");
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("HowToPlayPanel is not assigned in StartMenu!");
+        }
+    }
+
+    public void OnClickCloseHowToPlayPanel()
+    {
+        Debug.Log("Close How To Play panel button clicked");
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(false);
+            Debug.Log("닫힘");
+        }
+    }
+
+    public void OnClickExit()
+    {
+        Debug.Log("Exit button clicked");
+        Invoke(nameof(DelayedExit), 1f); // 1초 후 종료
+    }
+
+    void DelayedExit()
+    {
+        PlayerPrefs.Save();
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }
