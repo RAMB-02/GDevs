@@ -2,29 +2,36 @@ using UnityEngine;
 
 public class FPSCamera : MonoBehaviour
 {
-    public float mouseSensitivity = 80f; // ¸¶¿ì½º °¨µµ
-    public Transform playerBody;          // ÇÃ·¹ÀÌ¾î ¸öÃ¼ (ºÎ¸ð ¿ÀºêÁ§Æ®)
+    public float mouseSensitivity = 80f; // ï¿½ï¿½ï¿½ì½º ï¿½ï¿½ï¿½ï¿½
+    public Transform playerBody;          // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ã¼ (ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®)
 
-    private float xRotation = 0f;         // Ä«¸Þ¶óÀÇ »óÇÏ È¸Àü°ª ´©Àû
+    private float xRotation = 0f;         // Ä«ï¿½Þ¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+    public float lookSpeed = 2.0f;
 
     void Start()
     {
-        // Ä¿¼­¸¦ È­¸é Áß¾Ó¿¡ °íÁ¤½ÃÅ°°í ¼û±â´Â ¿É¼Ç
+        // Ä¿ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ß¾Ó¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½É¼ï¿½
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
-        // 1) ¸¶¿ì½º ÀÔ·Â ¹Þ±â
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (PauseMenu.isPaused)
+        {
+            return;
+        }
 
-        // 2) ÁÂ¿ì È¸Àü(Yaw) = ÇÃ·¹ÀÌ¾î º»Ã¼ È¸Àü
-        //    "playerBody"¸¦ È¸Àü½ÃÄÑ¾ß Ä³¸¯ÅÍ ÀÚÃ¼°¡ ÁÂ¿ì·Î ¿òÁ÷ÀÓ
+        // 1) ï¿½ï¿½ï¿½ì½º ï¿½Ô·ï¿½ ï¿½Þ±ï¿½
+        float mouseX = Input.GetAxis("Mouse X") * lookSpeed * SettingsPanelController.mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * lookSpeed * SettingsPanelController.mouseSensitivity;
+
+        // 2) ï¿½Â¿ï¿½ È¸ï¿½ï¿½(Yaw) = ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ã¼ È¸ï¿½ï¿½
+        //    "playerBody"ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Â¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         playerBody.Rotate(Vector3.up * mouseX);
 
-        // 3) »óÇÏ È¸Àü(Pitch) = Ä«¸Þ¶ó ÀÚÃ¼¸¸ È¸Àü
-        //    ¾Æ·¡ ÄÚµå¿¡¼­ xRotation¿¡ ´©ÀûÇØ¼­, Ä«¸Þ¶óÀÇ localRotationÀ» ¹Ù²ãÁÜ
+        // 3) ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½(Pitch) = Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ È¸ï¿½ï¿½
+        //    ï¿½Æ·ï¿½ ï¿½Úµå¿¡ï¿½ï¿½ xRotationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½, Ä«ï¿½Þ¶ï¿½ï¿½ï¿½ localRotationï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -70f, 70f);
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
