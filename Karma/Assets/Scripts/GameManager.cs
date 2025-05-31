@@ -1,10 +1,15 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     public Monster monster;
+    public Mummy mummy;
+    public MummyTrigger mummytrig;
+
+    public ToiletTrigger toilettrigger;
+
 
     [Header("Settings")]
     public Transform spawnPoint;
@@ -47,18 +52,25 @@ public class GameManager : MonoBehaviour
                 pc.ResetVelocity();
             }
 
-            Debug.Log("½ºÆù À§Ä¡·Î ÀÌµ¿ ¿Ï·á");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½Ï·ï¿½");
         }
         else
         {
-            Debug.LogWarning("Player ¿ÀºêÁ§Æ®¸¦ Ã£Áö ¸øÇß½À´Ï´Ù.");
+            Debug.LogWarning("Player ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
         }
 
-        // ¢º ¸ó½ºÅÍ ¸®¼Â
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (monster != null)
         {
             monster.ResetToInitialPosition();
         }
+        if (mummy != null)
+        {
+            mummy.MummyReset();
+            mummytrig.OnEnable();
+        }
+
+        toilettrigger.OnEnable();
 
         AnomalyManager.Instance.DeactivateAllAnomalies();
     }
@@ -67,7 +79,7 @@ public class GameManager : MonoBehaviour
     public void SetRandomAnomalies()
     {
         anomaly = AnomalyManager.Instance.RandomizeAnomalies();
-        Debug.Log("ÀÌ»óÇö»ó ¼ö: " + anomaly + "½ºÅ×ÀÌÁö: " + stage);
+        Debug.Log("ì´ìƒí˜„ìƒ ìˆ˜: " + anomaly + "ìŠ¤í…Œì´ì§€: " + stage);
 
 
     }
