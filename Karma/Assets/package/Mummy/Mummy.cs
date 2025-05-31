@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : MonoBehaviour
+public class Mummy : MonoBehaviour
 {
     public int attackDamage = 1;
     public Transform initialPosition;
     public Transform player;
     private UnityEngine.AI.NavMeshAgent agent;
 
-    public AudioClip footstepSound;
+    public AudioSource footstepSource;
     public AudioClip attackSound;
+    public AudioClip hissingSound;
     private AudioSource audioSource;
     public float stepInterval = 0.5f;
-    private float stepTimer = 0f;
+
 
     private Animator animator;
 
@@ -25,9 +26,14 @@ public class Monster : MonoBehaviour
 
     void Start()
     {
+        transform.rotation = initialPosition.rotation;
+
         audioSource = GetComponent<AudioSource>();
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         animator = GetComponent<Animator>();
+
+
+        audioSource.loop = false; // 반복 재생 금지
 
         agent.isStopped = true; // ▶ 첫 시작에는 플레이어를 추적하지 않기
         animator.SetBool("isWalking", false); // ▶ 시작할 때 Idle 상태로
@@ -37,7 +43,7 @@ public class Monster : MonoBehaviour
     {
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        if (stateInfo.IsName("rig|rig|attack_01"))
+        if (stateInfo.IsName("mummy_attack"))
         {
             agent.isStopped = true;
             animator.SetBool("isWalking", false);
@@ -52,24 +58,28 @@ public class Monster : MonoBehaviour
                 if (agent.velocity.magnitude > 0.1f)
                 {
                     animator.SetBool("isWalking", true);
-                    stepTimer += Time.deltaTime;
-                    if (stepTimer >= stepInterval)
+
+                    if (!footstepSource.isPlaying)
                     {
-                        audioSource.PlayOneShot(footstepSound);
-                        stepTimer = 0f;
+                        footstepSource.Play(); // ❗ 한 번만 재생되게
                     }
                 }
                 else
                 {
                     animator.SetBool("isWalking", false);
-                    stepTimer = 0f;
+
+                    if (footstepSource.isPlaying)
+                    {
+                        footstepSource.Stop(); // ❗ 걷기 중단 시 즉시 정지
+                    }
                 }
             }
             else
             {
                 agent.isStopped = true;
                 animator.SetBool("isWalking", false);
-                stepTimer = 0f;
+                footstepSource.Stop();
+
             }
         }
     }
@@ -94,12 +104,26 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void StartChasing() // ▶ 특정 명령에 의해 추적 시작
+    public void MummyChasing()
     {
         isChasing = true;
+
+        audioSource.PlayOneShot(hissingSound);
+
+        // 추적 시작 시 플레이어 방향으로 회전
+        if (player != null)
+        {
+            Vector3 direction = (player.position - transform.position).normalized;
+            direction.y = 0; // 위아래 각도 제거
+            if (direction != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(direction);
+            }
+        }
     }
 
-    public void ResetToInitialPosition()
+
+    public void MummyReset()
     {
         isChasing = false;
 
@@ -113,14 +137,13 @@ public class Monster : MonoBehaviour
             transform.position = initialPosition.position;
         }
 
-        transform.rotation = initialPosition.rotation; // ✅ 회전 복원 추가
+        transform.rotation = initialPosition.rotation; // 회전 복원 추가
 
         animator.SetBool("isWalking", false);
-        stepTimer = 0f;
+
 
         Debug.Log("몬스터 초기화 완료 (위치 + 회전)");
     }
-
     public void DealDamage()
     {
         if (player != null)
