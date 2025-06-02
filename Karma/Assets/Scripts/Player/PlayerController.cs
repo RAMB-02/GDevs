@@ -13,14 +13,12 @@ public class PlayerController : MonoBehaviour
     public float runSpeed = 6.0f;
 
     [Header("Jump & Gravity")]
-    public float jumpForce = 5f;     // Á¡ÇÁ ÃÊ±â Èû
-    public float gravity = 9.81f;    // Áß·Â °¡¼Óµµ
+    public float jumpForce = 5f;
+    public float gravity = 9.81f;
 
     private CharacterController controller;
-    private Vector3 velocity;        // ÇÃ·¹ÀÌ¾îÀÇ ½ÇÁ¦ ÀÌµ¿ ¼Óµµ (x, y, z)
-
-    // Áö»ó¿¡¼­ ´Ş¸®´Â »óÅÂ·Î Á¡ÇÁÇß´ÂÁö, °È´Â »óÅÂ·Î Á¡ÇÁÇß´ÂÁö ±¸ºĞÇÏ±â À§ÇØ »ç¿ë
-    private float currentAirSpeed;   // °øÁß¿¡¼­ Àû¿ëÇÒ (¼öÆò) ÀÌµ¿ ¼Óµµ
+    private Vector3 velocity;
+    private float currentAirSpeed;
 
     void Start()
     {
@@ -29,51 +27,49 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // â›” CharacterControllerê°€ ë¹„í™œì„±í™” ìƒíƒœë©´ ì´ë™ ì½”ë“œ ì‹¤í–‰ X
+        if (!controller.enabled) return;
+
         bool isGrounded = controller.isGrounded;
 
-        // 1) Áö»óÀÏ ¶§: yÃà ¼Óµµ¸¦ ¾à°£ ¾Æ·¡(-2f)·Î ¼¼ÆÃÇÏ¿© ¹Ù´Ú Áøµ¿ ¹æÁö
+        // 1) ë•…ì— ë‹¿ì•„ìˆê³  yì†ë„ê°€ ì•„ë˜ë¡œ ê°€ë©´ ê°€ë³ê²Œ ë¶™ì¡ê¸°
         if (isGrounded && velocity.y < 0f)
         {
             velocity.y = -2f;
         }
 
-        // Ç×»ó ÀÌµ¿ ÀÔ·Â(ÁÂ¿ì/¾ÕµÚ)Àº ¹Ş¾Æ¼­ moveDirÀ» ±¸ÇØµÎ±â
+        // ì´ë™ ì…ë ¥ ë°›ê¸°
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Vector3 moveDir = (transform.forward * v + transform.right * h).normalized;
 
-        // 2) Áö»óÀÏ ¶§ÀÇ ·ÎÁ÷
+        // 2) ë•… ìœ„ì¼ ë•Œ
         if (isGrounded)
         {
-            // ´Ş¸®±â ¿©ºÎ ÆÇ´Ü
             bool isRunning = Input.GetKey(KeyCode.LeftShift);
             float speed = isRunning ? runSpeed : walkSpeed;
 
-            // ¼öÆò ¹æÇâ ¼Óµµ °»½Å
             velocity.x = moveDir.x * speed;
             velocity.z = moveDir.z * speed;
 
-            // Á¡ÇÁ ÀÔ·Â
+            // ì í”„ ì…ë ¥
             if (Input.GetButtonDown("Jump"))
             {
                 velocity.y = jumpForce;
-                // Á¡ÇÁ ¼ø°£¿¡, "ÀÌ¹ø Á¡ÇÁ µ¿¾È À¯ÁöÇÒ ¼öÆò ¼Óµµ"¸¦ ÀúÀå
                 currentAirSpeed = speed;
             }
         }
         else
         {
-            // 3) °øÁßÀÏ ¶§ÀÇ ·ÎÁ÷
-            //   - °øÁß¿¡¼­´Â Shift¸¦ ´­·¯µµ ¼Óµµ ¹Ù²îÁö ¾ÊÀ½
-            //   - ´ë½Å ¹æÇâ ÀüÈ¯Àº ¾î´À Á¤µµ °¡´ÉÇÏµµ·Ï ÇÔ
+            // 3) ê³µì¤‘ì¼ ë•Œ: ì´ì „ ì†ë„ ìœ ì§€
             velocity.x = moveDir.x * currentAirSpeed;
             velocity.z = moveDir.z * currentAirSpeed;
         }
 
-        // 4) ¾ğÁ¦³ª Áß·Â Àû¿ë
+        // 4) ì¤‘ë ¥ ì ìš©
         velocity.y -= gravity * Time.deltaTime;
 
-        // 5) ÃÖÁ¾ ÀÌµ¿ ½ÇÇà
+        // 5) ìµœì¢… ì´ë™
         controller.Move(velocity * Time.deltaTime);
     }
 }
