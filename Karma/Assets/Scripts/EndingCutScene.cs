@@ -5,10 +5,7 @@ using UnityEngine.SceneManagement;
 public class EndingCutscene : MonoBehaviour
 {
     public Image[] endingImages;
-    public float displayTime = 2f;
-
     private int currentIndex = 0;
-    private float timer = 0f;
     private bool isLastImage => currentIndex >= endingImages.Length - 1;
 
     void Start()
@@ -18,18 +15,17 @@ public class EndingCutscene : MonoBehaviour
 
     void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= displayTime && !isLastImage)
+        if (Input.GetMouseButtonDown(0))
         {
-            currentIndex++;
-            timer = 0f;
-            ShowImage(currentIndex);
-        }
-
-        if (isLastImage && Input.GetMouseButtonDown(0))
-        {
-            SceneManager.LoadScene("MainView");
+            if (isLastImage)
+            {
+                SceneManager.LoadScene("MainView");
+            }
+            else
+            {
+                currentIndex++;
+                ShowImage(currentIndex);
+            }
         }
     }
 
