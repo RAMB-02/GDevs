@@ -23,6 +23,24 @@ public class Mummy : MonoBehaviour
     private float lastAttackTime = -999f; // 마지막 공격 시간 저장
 
     private bool isChasing = false; // ▶ 추적 시작 여부
+    void Awake()
+    {
+        if (initialPosition == null)
+        {
+            GameObject initPos = new GameObject("MummyInitialPosition");
+            initPos.transform.position = transform.position;
+            initPos.transform.rotation = transform.rotation;
+            initialPosition = initPos.transform;
+
+            Debug.LogWarning("initialPosition이 비어 있어 자동으로 현재 위치를 기준으로 생성했습니다.");
+        }
+
+        // ✅ 이 부분 추가
+        animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
+    }
+
 
     void Start()
     {

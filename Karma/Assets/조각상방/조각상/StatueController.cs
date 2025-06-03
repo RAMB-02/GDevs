@@ -7,6 +7,8 @@ public class StatueController : MonoBehaviour
     public float chaseRange = 10f;
     public AudioSource moveSound;
 
+    public Transform spawnPoint; // ✅ 스폰 위치 오브젝트 연결 (Inspector에서 드래그)
+
     private Renderer statueRenderer;
     private Camera playerCamera;
 
@@ -49,10 +51,7 @@ public class StatueController : MonoBehaviour
 
         if (Physics.Raycast(playerCamera.transform.position, dirToStatue, out RaycastHit hit, distance))
         {
-            if (hit.transform == statueRenderer.transform || hit.transform.IsChildOf(transform))
-                return true;
-
-            return false;
+            return hit.transform == statueRenderer.transform || hit.transform.IsChildOf(transform);
         }
 
         return true;
@@ -79,7 +78,20 @@ public class StatueController : MonoBehaviour
             moveSound.Stop();
     }
 
-    // ✅ 플레이어와 충돌 시 스테이지 리셋
+    // ✅ 스폰 위치 오브젝트 위치로 되돌리기
+    public void ResetStatue()
+    {
+        if (spawnPoint != null)
+        {
+            transform.position = spawnPoint.position;
+            transform.rotation = spawnPoint.rotation;
+        }
+        else
+        {
+            Debug.LogWarning("Statue의 SpawnPoint가 설정되어 있지 않습니다.");
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

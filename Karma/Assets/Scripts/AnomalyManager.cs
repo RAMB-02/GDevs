@@ -22,9 +22,22 @@ public class AnomalyManager : MonoBehaviour
         {
             obj.SetActive(false);
         }
-
-
     }
+    public void ResetAnomalyTriggers()
+    {
+        foreach (GameObject obj in anomalyObjects)
+        {
+            var hideTrigger = obj.GetComponent<HideOnTrigger>();
+            if (hideTrigger != null)
+                hideTrigger.ResetTrigger();
+
+            var timedTrigger = obj.GetComponent<TimedActivationTrigger>();
+            if (timedTrigger != null)
+                timedTrigger.ResetTrigger();
+
+        }
+    }
+
 
     public int RandomizeAnomalies()
     {

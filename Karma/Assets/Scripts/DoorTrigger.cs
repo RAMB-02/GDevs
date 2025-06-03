@@ -48,9 +48,6 @@ public class DoorTrigger : MonoBehaviour
     {
         if (playerInRange && Input.GetMouseButtonDown(0))
         {
-            // 문 이동 전에 조명 상태 복원
-            LightManager.Instance.SetAnomalyLights(false);
-
             // UI 숨기기
             if (interactUI != null)
             {
@@ -64,7 +61,7 @@ public class DoorTrigger : MonoBehaviour
 
             if (GameManager.Instance.stage == 7 && correctChoice)
             {
-                // 엔딩 씬("8stage")로 전환
+                // 마지막 씬으로("8stage") 전환
                 SceneManager.LoadScene("8stage");
                 return;
             }

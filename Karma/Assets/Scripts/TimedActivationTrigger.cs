@@ -34,7 +34,18 @@ public class TimedActivationTrigger : MonoBehaviour
         {
             targetObject.SetActive(false);
         }
+    }
 
-        isTriggered = false; // 다시 작동할 수 있도록 초기화 (원하면 제거 가능)
+    public void ResetTrigger()
+    {
+        isTriggered = false;
+
+        // 오브젝트가 켜진 상태일 수도 있으니 꺼줌
+        if (targetObject != null)
+        {
+            targetObject.SetActive(false);
+        }
+
+        CancelInvoke(); // 혹시 남아있던 Invoke 호출도 취소
     }
 }
