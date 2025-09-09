@@ -28208,7 +28208,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD658\uD48D\uAD6C \uC5F4\uAE30(\uC67C\uCABD \uD074\uB9AD)"
+  m_text: "\uD658\uD48D\uAD6C \uC5F4\uAE30(E)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a4fc7b2f0b85ceb4990cf6a927c782f7, type: 2}
   m_sharedMaterial: {fileID: 8365643459357804609, guid: a4fc7b2f0b85ceb4990cf6a927c782f7, type: 2}

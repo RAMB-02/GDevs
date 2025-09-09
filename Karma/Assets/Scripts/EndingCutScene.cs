@@ -19,7 +19,7 @@ public class EndingCutscene : MonoBehaviour
         {
             if (isLastImage)
             {
-                SceneManager.LoadScene("MainView");
+                SceneManager.LoadScene("StartMenuScene");
             }
             else
             {

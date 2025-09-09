@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class DoorTrigger : MonoBehaviour
 {
@@ -7,70 +8,105 @@ public class DoorTrigger : MonoBehaviour
     public DoorType doorType;
 
     private bool playerInRange = false;
+    private bool isActivated = true;
+    private bool inputDelayActive = false;
 
-    public bool triggerLightsOnEnter = false; // 트리거에 들어갔을 때 조명 조작 여부
+    public bool triggerLightsOnEnter = false;
 
     [Header("UI")]
-    public GameObject interactUI; // "문 열고 들어가기" 텍스트 오브젝트
+    public GameObject interactUI;
+
+    [Header("설정")]
+    public float disableDuration = 3f;       // E키 재사용 금지 시간
+    public float inputDelayTime = 0.3f;       // 트리거 진입 후 E 입력 딜레이 시간
+
+    private Collider doorCollider;
+
+    private void Awake()
+    {
+        doorCollider = GetComponent<Collider>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isActivated) return;
+
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
+            inputDelayActive = true; // 딜레이 시작
 
             if (triggerLightsOnEnter)
-            {
                 LightManager.Instance.SetAnomalyLights(true);
-            }
 
             if (interactUI != null)
-            {
-                interactUI.SetActive(true); // UI 표시
-            }
+                interactUI.SetActive(true);
+
+            StartCoroutine(InputDelayCoroutine());
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (!isActivated) return;
+
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
 
             if (interactUI != null)
-            {
-                interactUI.SetActive(false); // UI 숨김
-            }
+                interactUI.SetActive(false);
         }
     }
 
     private void Update()
     {
-        if (playerInRange && Input.GetMouseButtonDown(0))
-        {
-            // UI 숨기기
-            if (interactUI != null)
-            {
-                interactUI.SetActive(false);
-            }
+        if (!isActivated || !playerInRange || inputDelayActive) return;
 
-            // stage가 7이고 조건에 맞는 문을 선택했는지 확인
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isActivated = false;
+
+            if (interactUI != null)
+                interactUI.SetActive(false);
+
+            if (doorCollider != null)
+                doorCollider.enabled = false;
+
             bool correctChoice =
                 (doorType == DoorType.Back && GameManager.Instance.anomaly >= 1) ||
                 (doorType == DoorType.Front && GameManager.Instance.anomaly == 0);
 
             if (GameManager.Instance.stage == 7 && correctChoice)
             {
-                // 마지막 씬으로("8stage") 전환
                 SceneManager.LoadScene("8stage");
                 return;
             }
 
-            // 일반적인 루프 처리
             if (doorType == DoorType.Back)
                 GameManager.Instance.MoveToBackDoor();
             else
                 GameManager.Instance.MoveToFrontDoor();
+
+            LightManager.Instance.SetAnomalyLights(false);
+
+            StartCoroutine(ReenableAfterDelay());
         }
+    }
+
+    private IEnumerator InputDelayCoroutine()
+    {
+        yield return new WaitForSeconds(inputDelayTime);
+        inputDelayActive = false;
+    }
+
+    private IEnumerator ReenableAfterDelay()
+    {
+        yield return new WaitForSeconds(disableDuration);
+
+        if (doorCollider != null)
+            doorCollider.enabled = true;
+
+        isActivated = true;
     }
 }

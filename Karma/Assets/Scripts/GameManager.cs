@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
     public int anomaly = 0;
 
     public StatueController statue; // Inspector에서 직접 연결
-
     public LightTrigger lightTrigger;
 
     private void Awake()
@@ -42,13 +41,11 @@ public class GameManager : MonoBehaviour
             {
                 cc.enabled = false;
 
-                // 저장된 위치가 있으면 그 위치로 이동, 없으면 기본 스폰지점으로 이동
                 if (PlayerSpawnData.nextPosition != Vector3.zero)
                 {
                     player.transform.position = PlayerSpawnData.nextPosition;
                     player.transform.rotation = PlayerSpawnData.nextRotation;
 
-                    // 이동 후 초기화
                     PlayerSpawnData.nextPosition = Vector3.zero;
                     PlayerSpawnData.nextRotation = Quaternion.identity;
                 }
@@ -90,9 +87,8 @@ public class GameManager : MonoBehaviour
 
         // 몬스터 및 기타 리셋
         if (monster != null)
-        {
             monster.ResetToInitialPosition();
-        }
+
         if (mummy != null)
         {
             mummy.MummyReset();
@@ -108,9 +104,8 @@ public class GameManager : MonoBehaviour
         AnomalyManager.Instance.DeactivateAllAnomalies();
 
         if (lightTrigger != null)
-        {
             lightTrigger.ResetTrigger();
-        }
+
         if (statue != null)
         {
             Debug.Log("조각상 리셋!");
@@ -120,6 +115,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("Statue가 GameManager에 연결되지 않았습니다!");
         }
+
         AnomalyManager.Instance.ResetAnomalyTriggers();
     }
 

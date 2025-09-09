@@ -23,7 +23,7 @@ public class IntroCutscene : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 if (audioSource != null) audioSource.Stop();
-                SceneManager.LoadScene("IntroGameScene");
+                SceneManager.LoadScene("IntroScene2");
             }
             return;
         }
@@ -33,7 +33,7 @@ public class IntroCutscene : MonoBehaviour
             if (isLastImage)
             {
                 if (audioSource != null) audioSource.Stop();
-                SceneManager.LoadScene("IntroGameScene");
+                SceneManager.LoadScene("IntroScene2");
                 return;
             }
 

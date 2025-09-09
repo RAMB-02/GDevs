@@ -16,7 +16,7 @@ public class ventScript : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerInRange && Input.GetMouseButtonDown(0))
+        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
             foreach (GameObject obj in toggleObjects)
             {
