@@ -16,11 +16,11 @@ public class SettingsPanelController : MonoBehaviour
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
     public Slider brightnessSliderHDRP;
-    // public Button closeButton; // 닫기 버튼은 인스펙터에서 OnClick()으로 OnClickCloseButton() 연결
+    // closeButton은 인스펙터에서 OnClick()으로 OnClickCloseButton() 연결
 
     [Header("System References")]
     public AudioMixer mainMixer;
-    public Volume globalVolume; // 이 설정 패널이 제어할 Global Volume
+    public Volume globalVolume;
 
     [Header("Settings Values & Ranges")]
     public static float mouseSensitivity = 1f;
@@ -37,10 +37,14 @@ public class SettingsPanelController : MonoBehaviour
     public const string PREFS_BRIGHTNESS_HDRP = "ScreenBrightnessHDRP";
 
     private ColorAdjustments colorAdjustments;
-    private Resolution[] allResolutions;
     private List<Resolution> filteredResolutions;
     private int currentResolutionIndex = 0;
     private Action _onCloseCallback;
+
+    // 이전 슬라이더 값을 저장하여 변화가 있을 때만 업데이트
+    private float lastSensitivityValue;
+    private float lastVolumeValue;
+    private float lastBrightnessValue;
 
     void Awake()
     {
@@ -51,17 +55,43 @@ public class SettingsPanelController : MonoBehaviour
                 Debug.LogError("SettingsPanelController: Color Adjustments override not found. HDRP Brightness may not work.", gameObject);
             }
         }
-        else if (brightnessSliderHDRP != null && brightnessSliderHDRP.gameObject.activeSelf) // activeSelf 대신 activeInHierarchy가 더 정확할 수 있음
+        else if (brightnessSliderHDRP != null && brightnessSliderHDRP.gameObject.activeInHierarchy)
         {
-             Debug.LogWarning("SettingsPanelController: Global Volume is not assigned. HDRP Brightness control will not work.", gameObject);
+            Debug.LogWarning("SettingsPanelController: Global Volume is not assigned. HDRP Brightness control will not work.", gameObject);
         }
+
+        // SetupAllListeners() 코드를 제거하거나 비활성화
     }
 
     void OnEnable()
     {
         Debug.Log("SettingsPanelController: Panel Enabled. Refreshing UI from PlayerPrefs.");
         LoadAndApplyAllSettings();
-        SetupAllListeners();
+    }
+
+    // ✅ Update 함수를 추가
+    void Update()
+    {
+        // 마우스 감도 슬라이더 값 변경 감지
+        if (sensitivitySlider != null && !Mathf.Approximately(sensitivitySlider.value, lastSensitivityValue))
+        {
+            SetMouseSensitivity(sensitivitySlider.value);
+            lastSensitivityValue = sensitivitySlider.value;
+        }
+
+        // 볼륨 슬라이더 값 변경 감지
+        if (volumeSlider != null && !Mathf.Approximately(volumeSlider.value, lastVolumeValue))
+        {
+            SetMasterVolume(volumeSlider.value);
+            lastVolumeValue = volumeSlider.value;
+        }
+
+        // 밝기 슬라이더 값 변경 감지
+        if (brightnessSliderHDRP != null && !Mathf.Approximately(brightnessSliderHDRP.value, lastBrightnessValue))
+        {
+            SetBrightnessHDRP(brightnessSliderHDRP.value);
+            lastBrightnessValue = brightnessSliderHDRP.value;
+        }
     }
 
     public void OpenPanel(Action onCloseCallback = null)
@@ -86,29 +116,7 @@ public class SettingsPanelController : MonoBehaviour
         SetupBrightnessUI_HDRP();
     }
 
-    void SetupAllListeners()
-    {
-        if (sensitivitySlider != null) {
-            sensitivitySlider.onValueChanged.RemoveAllListeners();
-            sensitivitySlider.onValueChanged.AddListener(SetMouseSensitivity);
-        }
-        if (volumeSlider != null) {
-            volumeSlider.onValueChanged.RemoveAllListeners();
-            volumeSlider.onValueChanged.AddListener(SetMasterVolume);
-        }
-        if (resolutionDropdown != null) {
-            resolutionDropdown.onValueChanged.RemoveAllListeners();
-            resolutionDropdown.onValueChanged.AddListener(SetResolution);
-        }
-        if (fullscreenToggle != null) {
-            fullscreenToggle.onValueChanged.RemoveAllListeners();
-            fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-        }
-        if (brightnessSliderHDRP != null) {
-            brightnessSliderHDRP.onValueChanged.RemoveAllListeners();
-            brightnessSliderHDRP.onValueChanged.AddListener(SetBrightnessHDRP);
-        }
-    }
+    // SetupAllListeners() 함수 제거
 
     #region Mouse Sensitivity
     void SetupMouseSensitivityUI()
@@ -117,6 +125,7 @@ public class SettingsPanelController : MonoBehaviour
         {
             mouseSensitivity = PlayerPrefs.GetFloat(PREFS_MOUSE_SENSITIVITY, 1f);
             sensitivitySlider.value = mouseSensitivity;
+            lastSensitivityValue = mouseSensitivity; // 초기값 설정
         }
     }
     public void SetMouseSensitivity(float sensitivity)
@@ -129,39 +138,16 @@ public class SettingsPanelController : MonoBehaviour
     #region Audio Settings
     void SetupAudioUI()
     {
-        if (volumeSlider != null) // mainMixer null 체크는 ApplyMasterVolumeToMixer에서 함
-        {
-            float savedVolume = PlayerPrefs.GetFloat(PREFS_MASTER_VOLUME, 1f);
-            volumeSlider.value = savedVolume; // 슬라이더 UI는 항상 PlayerPrefs 값으로 업데이트
-
-            // ★★★ 수정된 부분 ★★★
-            // PauseMenu에 의해 게임이 일시정지된 상태가 아닐 때만 Mixer 볼륨을 실제로 변경
-            if (!PauseMenu.isPaused)
-            {
-                ApplyMasterVolumeToMixer(savedVolume);
-                Debug.Log("SettingsPanelController.SetupAudioUI: Applied PlayerPrefs volume to mixer (game not paused by PauseMenu).");
-            }
-            else
-            {
-                Debug.Log("SettingsPanelController.SetupAudioUI: Game IS paused by PauseMenu. Mixer volume NOT changed from snapshot. Slider shows PlayerPrefs value.");
-            }
-        }
+        if (volumeSlider == null) return;
+        float savedVolume = PlayerPrefs.GetFloat(PREFS_MASTER_VOLUME, 1f);
+        volumeSlider.SetValueWithoutNotify(savedVolume);
+        ApplyMasterVolumeToMixer(savedVolume);
+        lastVolumeValue = savedVolume; // 초기값 설정
     }
-    public void SetMasterVolume(float volume) // 슬라이더 값 (0.0001 ~ 1)
+    public void SetMasterVolume(float volume)
     {
-        PlayerPrefs.SetFloat(PREFS_MASTER_VOLUME, volume); // PlayerPrefs에는 항상 최신 슬라이더 값 저장
-        Debug.Log("SettingsPanelController: Master Volume PlayerPrefs updated to: " + volume);
-
-        // ★★★ 수정된 부분 ★★★
-        // PauseMenu에 의해 게임이 일시정지된 상태가 아닐 때만 Mixer 볼륨을 실제로 변경
-        if (!PauseMenu.isPaused)
-        {
-            ApplyMasterVolumeToMixer(volume);
-        }
-        else
-        {
-            Debug.LogWarning("SettingsPanelController.SetMasterVolume: Game IS paused by PauseMenu. Actual mixer volume update SKIPPED. PlayerPrefs was updated.");
-        }
+        PlayerPrefs.SetFloat(PREFS_MASTER_VOLUME, volume);
+        ApplyMasterVolumeToMixer(volume);
     }
     void ApplyMasterVolumeToMixer(float volume)
     {
@@ -178,7 +164,8 @@ public class SettingsPanelController : MonoBehaviour
     void SetupBrightnessUI_HDRP()
     {
         if (brightnessSliderHDRP == null) return;
-        if (globalVolume == null || colorAdjustments == null) {
+        if (globalVolume == null || colorAdjustments == null)
+        {
             Debug.LogWarning("SettingsPanelController: Global Volume or ColorAdjustments not available. Hiding HDRP Brightness slider.", gameObject);
             brightnessSliderHDRP.gameObject.SetActive(false);
             return;
@@ -187,6 +174,7 @@ public class SettingsPanelController : MonoBehaviour
         float savedSliderValue = PlayerPrefs.GetFloat(PREFS_BRIGHTNESS_HDRP, 0.5f);
         brightnessSliderHDRP.value = savedSliderValue;
         ApplyBrightnessToHDRP(savedSliderValue);
+        lastBrightnessValue = savedSliderValue; // 초기값 설정
     }
     public void SetBrightnessHDRP(float sliderValue)
     {
@@ -208,7 +196,7 @@ public class SettingsPanelController : MonoBehaviour
     {
         if (resolutionDropdown == null || fullscreenToggle == null) return;
 
-        allResolutions = Screen.resolutions;
+        var allResolutions = Screen.resolutions;
         filteredResolutions = new List<Resolution>();
         resolutionDropdown.ClearOptions();
         List<string> options = new List<string>();
@@ -224,11 +212,11 @@ public class SettingsPanelController : MonoBehaviour
             Resolution actualResolution = allResolutions.FirstOrDefault(r => r.width == displayMode.width && r.height == displayMode.height && GetRefreshRateValue(r) == displayMode.refreshRate);
             if (actualResolution.width > 0)
             {
-                 filteredResolutions.Add(actualResolution);
-                 options.Add(FormatResolution(actualResolution));
+                filteredResolutions.Add(actualResolution);
+                options.Add(FormatResolution(actualResolution));
             }
         }
-        
+
         resolutionDropdown.AddOptions(options);
         LoadAndApplyScreenSettingsFromPrefs();
         resolutionDropdown.RefreshShownValue();
@@ -242,11 +230,11 @@ public class SettingsPanelController : MonoBehaviour
         int savedWidth = PlayerPrefs.GetInt(PREFS_RESOLUTION_WIDTH, Screen.currentResolution.width);
         int savedHeight = PlayerPrefs.GetInt(PREFS_RESOLUTION_HEIGHT, Screen.currentResolution.height);
         RefreshRate currentRefreshRateStruct = Screen.currentResolution.refreshRateRatio;
-        #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
         currentRefreshRateStruct.numerator = (uint)PlayerPrefs.GetInt(PREFS_RESOLUTION_REFRESH_NUM, (int)currentRefreshRateStruct.numerator);
         currentRefreshRateStruct.denominator = (uint)PlayerPrefs.GetInt(PREFS_RESOLUTION_REFRESH_DENOM, (int)currentRefreshRateStruct.denominator);
-        #endif
-        
+#endif
+
         bool foundSavedResolution = false;
         for (int i = 0; i < filteredResolutions.Count; i++)
         {
@@ -262,42 +250,45 @@ public class SettingsPanelController : MonoBehaviour
         }
         if (!foundSavedResolution && filteredResolutions.Count > 0)
         {
-            for (int i = 0; i < filteredResolutions.Count; i++) {
+            for (int i = 0; i < filteredResolutions.Count; i++)
+            {
                 if (filteredResolutions[i].width == Screen.currentResolution.width &&
                     filteredResolutions[i].height == Screen.currentResolution.height &&
-                    CompareRefreshRates(filteredResolutions[i].refreshRateRatio, Screen.currentResolution.refreshRateRatio)) {
+                    CompareRefreshRates(filteredResolutions[i].refreshRateRatio, Screen.currentResolution.refreshRateRatio))
+                {
                     currentResolutionIndex = i;
                     resolutionDropdown.value = i;
                     foundSavedResolution = true;
                     break;
                 }
             }
-            if (!foundSavedResolution) {
-                 currentResolutionIndex = 0;
-                 resolutionDropdown.value = 0;
+            if (!foundSavedResolution)
+            {
+                currentResolutionIndex = 0;
+                resolutionDropdown.value = 0;
             }
         }
-        // ApplyScreenSettingsAtStartup(); // 게임 시작 시 한 번 적용하는 로직 (선택적)
     }
-    
-    bool CompareRefreshRates(RefreshRate r1, RefreshRate r2) {
-        #if UNITY_2022_2_OR_NEWER
+
+    bool CompareRefreshRates(RefreshRate r1, RefreshRate r2)
+    {
+#if UNITY_2022_2_OR_NEWER
         return r1.numerator == r2.numerator && r1.denominator == r2.denominator;
-        #else
+#else
         return GetRefreshRateValue(new Resolution{refreshRateRatio = r1}) == GetRefreshRateValue(new Resolution{refreshRateRatio = r2});
-        #endif
+#endif
     }
 
     string FormatResolution(Resolution resolution) { return resolution.width + " x " + resolution.height + " @ " + GetRefreshRateValue(resolution) + " Hz"; }
 
     int GetRefreshRateValue(Resolution resolution)
     {
-        #if UNITY_2022_2_OR_NEWER
-        if (resolution.refreshRateRatio.denominator == 0) return (int)resolution.refreshRateRatio.value; // Hz로 바로 변환
+#if UNITY_2022_2_OR_NEWER
+        if (resolution.refreshRateRatio.denominator == 0) return (int)resolution.refreshRateRatio.value;
         return (int)Mathf.Round((float)resolution.refreshRateRatio.numerator / resolution.refreshRateRatio.denominator);
-        #else
+#else
         return resolution.refreshRate;
-        #endif
+#endif
     }
 
     public void SetResolution(int resolutionIndex)
@@ -320,13 +311,12 @@ public class SettingsPanelController : MonoBehaviour
         Resolution resolution = filteredResolutions[currentResolutionIndex];
         bool fullscreen = PlayerPrefs.GetInt(PREFS_FULLSCREEN, Screen.fullScreen ? 1 : 0) == 1;
         FullScreenMode modeToSet = fullscreen ? FullScreenMode.ExclusiveFullScreen : FullScreenMode.Windowed;
-        
-        // 현재 해상도/모드와 동일하면 변경하지 않음 (불필요한 깜빡임 방지)
+
         if (Screen.currentResolution.width == resolution.width &&
             Screen.currentResolution.height == resolution.height &&
             Screen.fullScreenMode == modeToSet &&
-            CompareRefreshRates(Screen.currentResolution.refreshRateRatio, resolution.refreshRateRatio)) {
-            // Debug.Log("Screen settings are already applied.");
+            CompareRefreshRates(Screen.currentResolution.refreshRateRatio, resolution.refreshRateRatio))
+        {
             return;
         }
 
@@ -334,10 +324,10 @@ public class SettingsPanelController : MonoBehaviour
 
         PlayerPrefs.SetInt(PREFS_RESOLUTION_WIDTH, resolution.width);
         PlayerPrefs.SetInt(PREFS_RESOLUTION_HEIGHT, resolution.height);
-        #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
         PlayerPrefs.SetInt(PREFS_RESOLUTION_REFRESH_NUM, (int)resolution.refreshRateRatio.numerator);
         PlayerPrefs.SetInt(PREFS_RESOLUTION_REFRESH_DENOM, (int)resolution.refreshRateRatio.denominator);
-        #endif
+#endif
         Debug.Log("SettingsPanelController: Screen settings applied - " + FormatResolution(resolution) + ", Fullscreen: " + fullscreen);
     }
     #endregion

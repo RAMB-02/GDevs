@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class LightTrigger : MonoBehaviour
 {
@@ -8,7 +8,13 @@ public class LightTrigger : MonoBehaviour
     {
         if (!triggered && other.CompareTag("Player"))
         {
-            LightManager.Instance.SetAnomalyLights(true);
+            // âœ… ë¡œê·¸ ì¶”ê°€
+            Debug.Log("LightTrigger: í”Œë ˆì´ì–´ê°€ ì§„ì…í–ˆìŠµë‹ˆë‹¤. ì¡°ëª…ì„ ì–´ë‘¡ê²Œ ë³€ê²½ ìš”ì²­.");
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetAnomalyLightState(true);
+            }
             triggered = true;
         }
     }
@@ -16,11 +22,7 @@ public class LightTrigger : MonoBehaviour
     public void ResetTrigger()
     {
         triggered = false;
-        LightManager.Instance.SetAnomalyLights(false); // Á¶¸í Á¤»óÈ­
-    }
-
-    private void OnEnable()
-    {
-        ResetTrigger(); // Áß¿ä: ¿ÀºêÁ§Æ®°¡ ´Ù½Ã È°¼ºÈ­µÉ ¶§ ÃÊ±âÈ­
+        // âœ… ë¡œê·¸ ì¶”ê°€
+        Debug.Log("LightTrigger: íŠ¸ë¦¬ê±° ìƒíƒœë¥¼ ë¦¬ì…‹í–ˆìŠµë‹ˆë‹¤. triggered = false");
     }
 }

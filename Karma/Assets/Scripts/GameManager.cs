@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections; // Coroutine을 사용하기 위해 추가
 
 public class GameManager : MonoBehaviour
 {
@@ -14,13 +15,33 @@ public class GameManager : MonoBehaviour
     public int stage = 1;
     public int anomaly = 0;
 
-    public StatueController statue; // Inspector에서 직접 연결
-    public LightTrigger lightTrigger;
+    public StatueController statue;
+    public LightTrigger lightTrigger; // 인스펙터에서 연결 필수
+
+    // GameManager가 조명 상태를 직접 제어하는 함수
+    public void SetAnomalyLightState(bool isAnomaly)
+    {
+        if (LightManager.Instance != null)
+        {
+            LightManager.Instance.SetAnomalyLights(isAnomaly);
+        }
+        else
+        {
+            Debug.LogError("LightManager 인스턴스를 찾을 수 없습니다.");
+        }
+    }
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            // 씬이 바뀌어도 파괴되지 않게 하려면 DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
@@ -31,6 +52,14 @@ public class GameManager : MonoBehaviour
 
     public void ResetStage()
     {
+        // ------------------------------------
+        // LightTrigger를 일시적으로 비활성화
+        // ------------------------------------
+        if (lightTrigger != null)
+        {
+            lightTrigger.gameObject.SetActive(false);
+        }
+
         GameObject player = GameObject.FindWithTag("Player");
 
         if (player != null)
@@ -45,7 +74,6 @@ public class GameManager : MonoBehaviour
                 {
                     player.transform.position = PlayerSpawnData.nextPosition;
                     player.transform.rotation = PlayerSpawnData.nextRotation;
-
                     PlayerSpawnData.nextPosition = Vector3.zero;
                     PlayerSpawnData.nextRotation = Quaternion.identity;
                 }
@@ -62,7 +90,6 @@ public class GameManager : MonoBehaviour
                 {
                     player.transform.position = PlayerSpawnData.nextPosition;
                     player.transform.rotation = PlayerSpawnData.nextRotation;
-
                     PlayerSpawnData.nextPosition = Vector3.zero;
                     PlayerSpawnData.nextRotation = Quaternion.identity;
                 }
@@ -85,27 +112,42 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("Player 태그가 있는 오브젝트를 찾을 수 없습니다!");
         }
 
-        // 몬스터 및 기타 리셋
+        // ------------------------------------
+        // 게임 오브젝트 상태 초기화
+        // ------------------------------------
+
+        // 조명 초기화 (GameManager가 직접 관리)
+        SetAnomalyLightState(false);
+        if (lightTrigger != null)
+        {
+            lightTrigger.ResetTrigger(); // LightTrigger의 상태만 초기화
+        }
+
+        // 몬스터 및 기타 초기화
         if (monster != null)
             monster.ResetToInitialPosition();
 
         if (mummy != null)
         {
             mummy.MummyReset();
+        }
+        if (mummytrig != null)
+        {
             mummytrig.OnEnable();
         }
-
-        toilettrigger.OnEnable();
-
-        // 조명 초기화
-        LightManager.Instance.SetAnomalyLights(false);
+        if (toilettrigger != null)
+        {
+            toilettrigger.OnEnable();
+        }
 
         // 이상현상 초기화
-        AnomalyManager.Instance.DeactivateAllAnomalies();
+        if (AnomalyManager.Instance != null)
+        {
+            AnomalyManager.Instance.DeactivateAllAnomalies();
+            AnomalyManager.Instance.ResetAnomalyTriggers();
+        }
 
-        if (lightTrigger != null)
-            lightTrigger.ResetTrigger();
-
+        // 조각상 초기화
         if (statue != null)
         {
             Debug.Log("조각상 리셋!");
@@ -116,7 +158,13 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("Statue가 GameManager에 연결되지 않았습니다!");
         }
 
-        AnomalyManager.Instance.ResetAnomalyTriggers();
+        // ------------------------------------
+        // 모든 리셋 작업 후 LightTrigger 다시 활성화
+        // ------------------------------------
+        if (lightTrigger != null)
+        {
+            lightTrigger.gameObject.SetActive(true);
+        }
     }
 
     public void SetRandomAnomalies()

@@ -7,7 +7,7 @@ public class StatueController : MonoBehaviour
     public float chaseRange = 10f;
     public AudioSource moveSound;
 
-    public Transform spawnPoint; // ✅ 스폰 위치 오브젝트 연결 (Inspector에서 드래그)
+    public Transform spawnPoint;
 
     private Renderer statueRenderer;
     private Camera playerCamera;
@@ -78,7 +78,6 @@ public class StatueController : MonoBehaviour
             moveSound.Stop();
     }
 
-    // ✅ 스폰 위치 오브젝트 위치로 되돌리기
     public void ResetStatue()
     {
         if (spawnPoint != null)
@@ -97,9 +96,11 @@ public class StatueController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("조각상이 플레이어와 충돌했습니다. 스테이지 리셋!");
-            GameManager.Instance.stage = 1;
-            GameManager.Instance.ResetStage();
-            GameManager.Instance.SetRandomAnomalies();
+            // GameManager가 모든 리셋을 관리하도록 함
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.ResetStage();
+            }
         }
     }
 }

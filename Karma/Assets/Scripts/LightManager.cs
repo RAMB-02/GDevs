@@ -1,17 +1,17 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class LightManager : MonoBehaviour
 {
     public static LightManager Instance { get; private set; }
 
-    [Header("Á¶¸í ¸®½ºÆ® (¼öµ¿ µî·Ï)")]
-    public Light[] lights; // ÀÎ½ºÆåÅÍ¿¡¼­ µî·Ï
+    [Header("ì¡°ëª… ë¦¬ìŠ¤íŠ¸ (ìˆ˜ë™ ë“±ë¡)")]
+    public Light[] lights; // ì¸ìŠ¤í™í„°ì—ì„œ ë“±ë¡
 
-    [Header("Á¤»ó »óÅÂ")]
+    [Header("ì •ìƒ ìƒíƒœ")]
     public float normalRange = 20f;
     public float normalIntensity = 3200f;
 
-    [Header("ÀÌ»ó »óÅÂ")]
+    [Header("ì´ìƒ ìƒíƒœ")]
     public float anomalyRange = 12f;
     public float anomalyIntensity = 500f;
 
@@ -29,10 +29,13 @@ public class LightManager : MonoBehaviour
 
     public void SetAnomalyLights(bool isAnomaly)
     {
+        // âœ… ë¡œê·¸ ì¶”ê°€
+        Debug.Log($"LightManager: ì¡°ëª… ìƒíƒœë¥¼ {(isAnomaly ? "ì´ìƒ" : "ì •ìƒ")}ìœ¼ë¡œ ë³€ê²½í•©ë‹ˆë‹¤.");
+        Debug.Log($"LightManager: ë“±ë¡ëœ ì¡°ëª… ìˆ˜: {lights.Length}");
+
         foreach (Light light in lights)
         {
             if (light == null) continue;
-
             light.range = isAnomaly ? anomalyRange : normalRange;
             light.intensity = isAnomaly ? anomalyIntensity : normalIntensity;
         }
