@@ -18,7 +18,7 @@ public class Monster : MonoBehaviour
 
     private Animator animator;
 
-    public float attackCooldown = 1f; // 공격 쿨타임 (초)
+    public float attackCooldown = 1.8f; // 공격 쿨타임 (초)
     private float lastAttackTime = -999f; // 마지막 공격 시간 저장
 
     private bool isChasing = false; // ▶ 추적 시작 여부

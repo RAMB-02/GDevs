@@ -74241,7 +74241,7 @@ MonoBehaviour:
   - {fileID: 1795922839156218015}
   - {fileID: 1421488044}
   - {fileID: 1424171994}
-  activationChance: 0.12
+  activationChance: 1
 --- !u!43 &2096835150
 Mesh:
   m_ObjectHideFlags: 0
