@@ -131,6 +131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fern_B (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
       value: 4.3499
@@ -1894,7 +1898,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -2415,6 +2419,10 @@ PrefabInstance:
     - target: {fileID: 4798742950742889349, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_Name
       value: Fern_B (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
@@ -5379,6 +5387,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fern_C (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7140844442097323097, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.4395
@@ -6184,6 +6196,10 @@ PrefabInstance:
     - target: {fileID: 4798742950742889349, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_Name
       value: Fern_B (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
@@ -7382,6 +7398,10 @@ PrefabInstance:
     - target: {fileID: 1647502441230210415, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_Name
       value: Fern_C (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7140844442097323097, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_LocalScale.x
@@ -17829,7 +17849,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -19357,7 +19377,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -19721,7 +19741,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -21178,6 +21198,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heather_A (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21857,7 +21881,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -21972,6 +21996,10 @@ PrefabInstance:
     - target: {fileID: 8267427934229748759, guid: cce04f533c148314abf74aff71206ec7, type: 3}
       propertyPath: m_Name
       value: Heather_A (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22927,7 +22955,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -22968,6 +22996,10 @@ PrefabInstance:
     - target: {fileID: 1647502441230210415, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_Name
       value: Fern_C
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7140844442097323097, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_LocalScale.x
@@ -23077,6 +23109,10 @@ PrefabInstance:
     - target: {fileID: 8267427934229748759, guid: cce04f533c148314abf74aff71206ec7, type: 3}
       propertyPath: m_Name
       value: Heather_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -23390,6 +23426,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fern_A (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.0153
@@ -23463,6 +23503,10 @@ PrefabInstance:
     - target: {fileID: 2085449277718671952, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_Name
       value: Fern_A (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
@@ -29008,7 +29052,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -29801,6 +29845,10 @@ PrefabInstance:
     - target: {fileID: 2085449277718671952, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_Name
       value: Fern_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
@@ -31299,6 +31347,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heather_A (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -32088,7 +32140,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -32176,6 +32228,10 @@ PrefabInstance:
     - target: {fileID: 4798742950742889349, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_Name
       value: Fern_B (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
@@ -32359,6 +32415,10 @@ PrefabInstance:
     - target: {fileID: 2085449277718671952, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_Name
       value: Fern_A (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
@@ -35935,6 +35995,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fern_A (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.601776
@@ -38093,6 +38157,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fern_C (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7140844442097323097, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.1354828
@@ -38166,6 +38234,10 @@ PrefabInstance:
     - target: {fileID: 658749458356824200, guid: dd902ff2a6f685041be127af00c09664, type: 3}
       propertyPath: m_Name
       value: Heather_B (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1812815810799895238, guid: dd902ff2a6f685041be127af00c09664, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3120705534441101108, guid: dd902ff2a6f685041be127af00c09664, type: 3}
       propertyPath: m_LocalPosition.x
@@ -39155,6 +39227,10 @@ PrefabInstance:
     - target: {fileID: 2085449277718671952, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_Name
       value: Fern_A (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
@@ -40326,6 +40402,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heather_A (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -40634,6 +40714,14 @@ PrefabInstance:
     - target: {fileID: 4798742950742889349, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_Name
       value: Fern_B
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
@@ -41237,7 +41325,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -41646,9 +41734,9 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -41886,7 +41974,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -42234,7 +42322,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -42690,7 +42778,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -43824,7 +43912,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -44287,7 +44375,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -44878,6 +44966,10 @@ PrefabInstance:
     - target: {fileID: 8267427934229748759, guid: cce04f533c148314abf74aff71206ec7, type: 3}
       propertyPath: m_Name
       value: Heather_A (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -47278,6 +47370,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fern_B (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.8116431
@@ -47502,8 +47598,8 @@ Transform:
   m_GameObject: {fileID: 1460596021}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 29, y: -0.87, z: -1.3092175}
-  m_LocalScale: {x: 0.9, y: 1, z: 1.215}
+  m_LocalPosition: {x: 29, y: -0.61, z: -0.4}
+  m_LocalScale: {x: 1.9298934, y: 1, z: 1.0339165}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2072058338}
@@ -49648,6 +49744,10 @@ PrefabInstance:
     - target: {fileID: 4798742950742889349, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_Name
       value: Fern_B (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568925281509450877, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6705124330343625574, guid: 5e7ace55a7bfd0d4f9ba3c05024e9d79, type: 3}
       propertyPath: m_LocalScale.x
@@ -56223,7 +56323,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -56510,6 +56610,10 @@ PrefabInstance:
     - target: {fileID: 1647502441230210415, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_Name
       value: Fern_C (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7140844442097323097, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_LocalScale.x
@@ -71383,6 +71487,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heather_B
       objectReference: {fileID: 0}
+    - target: {fileID: 1812815810799895238, guid: dd902ff2a6f685041be127af00c09664, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3120705534441101108, guid: dd902ff2a6f685041be127af00c09664, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.9
@@ -74252,7 +74360,7 @@ MonoBehaviour:
   - {fileID: 1795922839156218015}
   - {fileID: 1421488044}
   - {fileID: 1424171994}
-  activationChance: 1
+  activationChance: 0.1
 --- !u!43 &2096835150
 Mesh:
   m_ObjectHideFlags: 0
@@ -75263,6 +75371,10 @@ PrefabInstance:
     - target: {fileID: 2085449277718671952, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_Name
       value: Fern_A (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6754631035083144406, guid: 6629880e46886724fa0107d3035304e6, type: 3}
+      propertyPath: m_RayTracingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8525110361885640127, guid: 6629880e46886724fa0107d3035304e6, type: 3}
       propertyPath: m_LocalScale.x
