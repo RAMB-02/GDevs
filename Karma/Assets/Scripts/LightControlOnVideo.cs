@@ -3,22 +3,16 @@ using UnityEngine.Video;
 
 public class LightControlOnVideo : MonoBehaviour
 {
-    private VideoPlayer videoPlayer; // private으로 변경하여 스크립트에서 직접 찾게 만듭니다.
-    private Light targetLight;
-    public string lightTagName = "Directional Light";
-    
+    private VideoPlayer videoPlayer;
+    // public으로 변경하여 인스펙터에서 직접 라이트를 드래그 앤 드롭으로 할당합니다.
+    public Light targetLight;
+
     void Start()
     {
         // 씬에서 VideoPlayer 컴포넌트를 찾습니다.
         videoPlayer = FindObjectOfType<VideoPlayer>();
 
-        // 'MainLight' 태그를 가진 오브젝트를 씬에서 찾아 조명을 연결합니다.
-        GameObject lightObject = GameObject.FindWithTag(lightTagName);
-        if (lightObject != null)
-        {
-            targetLight = lightObject.GetComponent<Light>();
-        }
-
+        // targetLight가 인스펙터에서 할당되었는지 확인합니다.
         if (videoPlayer != null && targetLight != null)
         {
             videoPlayer.started += OnVideoStarted;
@@ -33,7 +27,8 @@ public class LightControlOnVideo : MonoBehaviour
             }
             if (targetLight == null)
             {
-                Debug.LogError("씬에서 '" + lightTagName + "' 태그를 가진 Light 오브젝트를 찾을 수 없습니다.");
+                // 오류 메시지를 인스펙터에서 할당해야 함을 명확히 알립니다.
+                Debug.LogError("Target Light가 할당되지 않았습니다. 인스펙터에서 Light 오브젝트를 연결해주세요.");
             }
         }
     }
