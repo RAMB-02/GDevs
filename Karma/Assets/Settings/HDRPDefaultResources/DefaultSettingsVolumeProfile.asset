@@ -1175,48 +1175,7 @@ MonoBehaviour:
   m_Name: DefaultSettingsVolumeProfile
   m_EditorClassIdentifier: 
   components:
-  - {fileID: 7686318427622180703}
-  - {fileID: -1016694868962581565}
-  - {fileID: 7502528774814404555}
-  - {fileID: 7542669330009093999}
-  - {fileID: 1501199423866068322}
-  - {fileID: 5315503232242033309}
-  - {fileID: 1932259527246508038}
-  - {fileID: 448115243408767295}
-  - {fileID: -7089757308646879465}
-  - {fileID: -8500501345142028434}
-  - {fileID: 2097231660816403494}
-  - {fileID: 1768183673982473238}
-  - {fileID: 7492721109116608008}
-  - {fileID: 7256763818733982070}
-  - {fileID: 535121832005431742}
-  - {fileID: -2262172212444005093}
-  - {fileID: -190263026283433657}
-  - {fileID: -460262870721100291}
-  - {fileID: 5106897227720352812}
-  - {fileID: -1824265651924620875}
-  - {fileID: 2867407552756193798}
-  - {fileID: 8426231615800784783}
-  - {fileID: 1711494491052730993}
-  - {fileID: -1653003986678736801}
-  - {fileID: 6882118552061878046}
-  - {fileID: -3553795710432678763}
-  - {fileID: -4736477399358400465}
-  - {fileID: -6973459514784221343}
-  - {fileID: -3965322263166354143}
-  - {fileID: 282377761439011470}
-  - {fileID: 276887860447626823}
-  - {fileID: -1160783862581445329}
-  - {fileID: 5662878030039192741}
-  - {fileID: -6354659651782325595}
-  - {fileID: 6134222162997350170}
-  - {fileID: 8765057687935197861}
-  - {fileID: 3263511980392464876}
-  - {fileID: -5603991839897965806}
-  - {fileID: 8312081095807939588}
-  - {fileID: 3647996619351185258}
-  - {fileID: -5128403673633302274}
-  - {fileID: -7980316775305595271}
+  - {fileID: 4581065541510200668}
 --- !u!114 &276887860447626823
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1969,6 +1928,24 @@ MonoBehaviour:
   minSolidAngle:
     m_OverrideState: 1
     m_Value: 4
+--- !u!114 &4581065541510200668
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a7ff42a8c5be6646ad3975f3a54c1eb, type: 3}
+  m_Name: DiffusionProfileList
+  m_EditorClassIdentifier: 
+  active: 1
+  diffusionProfiles:
+    m_OverrideState: 1
+    m_Value:
+    - {fileID: 11400000, guid: 404820c4cf36ad944862fa59c56064f0, type: 2}
+    - {fileID: 11400000, guid: 2384dbf2c1c420f45a792fbc315fbfb1, type: 2}
 --- !u!114 &5106897227720352812
 MonoBehaviour:
   m_ObjectHideFlags: 3
