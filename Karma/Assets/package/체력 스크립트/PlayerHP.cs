@@ -5,11 +5,11 @@ using UnityEngine.Rendering.HighDefinition;
 public class PlayerHP : MonoBehaviour
 {
     private LensDistortion lensDistortion;
-    public float healDelay = 5f;        // 마지막 피해 이후 회복 시작까지 기다리는 시간
-    public float healInterval = 1f;     // 회복 주기
-    public int healAmount = 1;          // 회복량
-    private float lastHitTime;          // 마지막으로 피해 입은 시간
-    private float healTimer = 0f;       // 회복 주기 타이머
+    public float healDelay = 5f;      // 마지막 피해 이후 회복 시작까지 기다리는 시간
+    public float healInterval = 1f;   // 회복 주기
+    public int healAmount = 1;        // 회복량
+    private float lastHitTime;        // 마지막으로 피해 입은 시간
+    private float healTimer = 0f;     // 회복 주기 타이머
 
     public CameraShake cameraShake;
     public AudioClip[] hitSounds;
@@ -25,7 +25,7 @@ public class PlayerHP : MonoBehaviour
     {
         currentHealth = maxHealth;
         audioSource = GetComponent<AudioSource>();
-        if (volume.profile.TryGet(out chroma) && volume.profile.TryGet(out lensDistortion)) 
+        if (volume.profile.TryGet(out chroma) && volume.profile.TryGet(out lensDistortion))
         {
             UpdateVisualEffect();
         }
@@ -52,9 +52,6 @@ public class PlayerHP : MonoBehaviour
         }
     }
 
-    
-
-
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -71,8 +68,6 @@ public class PlayerHP : MonoBehaviour
             int index = Random.Range(0, hitSounds.Length);
             audioSource.PlayOneShot(hitSounds[index], 1.0f);
         }
-
-
 
         if (currentHealth <= 0)
         {
@@ -95,15 +90,21 @@ public class PlayerHP : MonoBehaviour
         {
             lensDistortion.intensity.value = Mathf.Lerp(0f, -0.5f, effectStrength);
         }
-}
+    }
 
     private void Die()
     {
         Debug.Log("플레이어 사망");
         if (GameManager.Instance != null)
         {
+            // ===================================================================
+            // BUG FIX: 리셋 함수를 호출하기 전에 스테이지를 1로 설정합니다.
+            // ===================================================================
+            GameManager.Instance.stage = 1;
+
             GameManager.Instance.ResetStage();
-            GameManager.Instance.SetRandomAnomalies();
+            // 참고: ResetStage() 내부에서 SetRandomAnomalies()를 호출하도록 수정했으므로 아래 라인은 없어도 됩니다.
+            // GameManager.Instance.SetRandomAnomalies();
 
             currentHealth = maxHealth;
             UpdateVisualEffect();

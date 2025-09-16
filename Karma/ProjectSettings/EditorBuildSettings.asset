@@ -22,7 +22,7 @@ EditorBuildSettings:
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
   - enabled: 1
     path: Assets/Scenes/8stage.unity
-    guid: bf93fa4afbe366544937d043665e5f17
+    guid: 4e2e4816dd922b440a8c74fd10acfb95
   - enabled: 1
     path: Assets/Scenes/EndingScene.unity
     guid: b0f1435d9e91e94488516e12ba259191

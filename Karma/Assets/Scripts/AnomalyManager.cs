@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+
 public class AnomalyManager : MonoBehaviour
 {
     public static AnomalyManager Instance;
@@ -23,6 +24,7 @@ public class AnomalyManager : MonoBehaviour
             obj.SetActive(false);
         }
     }
+
     public void ResetAnomalyTriggers()
     {
         foreach (GameObject obj in anomalyObjects)
@@ -35,9 +37,12 @@ public class AnomalyManager : MonoBehaviour
             if (timedTrigger != null)
                 timedTrigger.ResetTrigger();
 
+            // DinoRoarTrigger를 찾아 리셋하는 코드
+            var dinoTrigger = obj.GetComponent<DinoRoarTrigger>();
+            if (dinoTrigger != null)
+                dinoTrigger.ResetTrigger();
         }
     }
-
 
     public int RandomizeAnomalies()
     {
@@ -50,7 +55,6 @@ public class AnomalyManager : MonoBehaviour
 
             if (activate) count++;
         }
-
 
         return count;
     }

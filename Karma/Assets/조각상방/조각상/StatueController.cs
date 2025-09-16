@@ -96,9 +96,13 @@ public class StatueController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("조각상이 플레이어와 충돌했습니다. 스테이지 리셋!");
-            // GameManager가 모든 리셋을 관리하도록 함
+
             if (GameManager.Instance != null)
             {
+                // ===================================================================
+                // BUG FIX: 리셋 함수를 호출하기 전에 스테이지를 1로 설정합니다.
+                // ===================================================================
+                GameManager.Instance.stage = 1;
                 GameManager.Instance.ResetStage();
             }
         }

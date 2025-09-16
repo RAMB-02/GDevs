@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections; // Coroutine을 사용하기 위해 추가
+using System.Collections;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -20,9 +20,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI worldStageText;
 
     public StatueController statue;
-    public LightTrigger lightTrigger; // 인스펙터에서 연결 필수
+    public LightTrigger lightTrigger;
 
-    // GameManager가 조명 상태를 직접 제어하는 함수
+    private Collider lightTriggerCollider;
+
     public void SetAnomalyLightState(bool isAnomaly)
     {
         if (LightManager.Instance != null)
@@ -41,6 +42,10 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            if (lightTrigger != null)
+            {
+                lightTriggerCollider = lightTrigger.GetComponent<Collider>();
+            }
         }
         else
         {
@@ -51,163 +56,103 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         ResetStage();
-        SetRandomAnomalies();
     }
 
     void UpdateStageUI()
     {
         if (worldStageText != null)
         {
-            worldStageText.text = stage.ToString(); //stage를 문자열로 변환해서 텍스트로 표시 
+            worldStageText.text = stage.ToString();
         }
     }
 
-
     public void ResetStage()
     {
-        // ------------------------------------
-        // LightTrigger를 일시적으로 비활성화
-        // ------------------------------------
-        if (lightTrigger != null)
+        // 1. LightTrigger의 물리 감지를 먼저 끕니다.
+        if (lightTriggerCollider != null)
         {
-            lightTrigger.gameObject.SetActive(false);
+            lightTriggerCollider.enabled = false;
         }
 
+        // 2. 플레이어 위치를 리셋합니다.
         GameObject player = GameObject.FindWithTag("Player");
-
         if (player != null)
         {
             CharacterController cc = player.GetComponent<CharacterController>();
-
             if (cc != null)
             {
                 cc.enabled = false;
-
-                if (PlayerSpawnData.nextPosition != Vector3.zero)
-                {
-                    player.transform.position = PlayerSpawnData.nextPosition;
-                    player.transform.rotation = PlayerSpawnData.nextRotation;
-                    PlayerSpawnData.nextPosition = Vector3.zero;
-                    PlayerSpawnData.nextRotation = Quaternion.identity;
-                }
-                else
-                {
-                    player.transform.position = spawnPoint.position;
-                }
-
+                player.transform.position = (PlayerSpawnData.nextPosition != Vector3.zero) ? PlayerSpawnData.nextPosition : spawnPoint.position;
+                player.transform.rotation = (PlayerSpawnData.nextPosition != Vector3.zero) ? PlayerSpawnData.nextRotation : Quaternion.identity;
                 cc.enabled = true;
             }
             else
             {
-                if (PlayerSpawnData.nextPosition != Vector3.zero)
-                {
-                    player.transform.position = PlayerSpawnData.nextPosition;
-                    player.transform.rotation = PlayerSpawnData.nextRotation;
-                    PlayerSpawnData.nextPosition = Vector3.zero;
-                    PlayerSpawnData.nextRotation = Quaternion.identity;
-                }
-                else
-                {
-                    player.transform.position = spawnPoint.position;
-                }
+                player.transform.position = (PlayerSpawnData.nextPosition != Vector3.zero) ? PlayerSpawnData.nextPosition : spawnPoint.position;
+                player.transform.rotation = (PlayerSpawnData.nextPosition != Vector3.zero) ? PlayerSpawnData.nextRotation : Quaternion.identity;
             }
-
+            PlayerSpawnData.nextPosition = Vector3.zero;
+            PlayerSpawnData.nextRotation = Quaternion.identity;
             PlayerController pc = player.GetComponent<PlayerController>();
-            if (pc != null)
-            {
-                pc.ResetVelocity();
-            }
-
+            if (pc != null) pc.ResetVelocity();
             Debug.Log("플레이어 위치 리셋 완료");
         }
-        else
-        {
-            Debug.LogWarning("Player 태그가 있는 오브젝트를 찾을 수 없습니다!");
-        }
 
-        // ------------------------------------
-        // 게임 오브젝트 상태 초기화
-        // ------------------------------------
-
-        // 조명 초기화 (GameManager가 직접 관리)
-        SetAnomalyLightState(false);
-        if (lightTrigger != null)
-        {
-            lightTrigger.ResetTrigger(); // LightTrigger의 상태만 초기화
-        }
-
-        // 몬스터 및 기타 초기화
-        if (monster != null)
-            monster.ResetToInitialPosition();
-
-        if (mummy != null)
-        {
-            mummy.MummyReset();
-        }
-        if (mummytrig != null)
-        {
-            mummytrig.OnEnable();
-        }
-        if (toilettrigger != null)
-        {
-            toilettrigger.OnEnable();
-        }
-
-        // 이상현상 초기화
+        // 3. 몬스터 및 다른 트리거들을 리셋합니다.
+        if (lightTrigger != null) lightTrigger.ResetTrigger();
+        if (monster != null) monster.ResetToInitialPosition();
+        if (mummy != null) mummy.MummyReset();
+        if (mummytrig != null) mummytrig.OnEnable();
+        if (toilettrigger != null) toilettrigger.OnEnable();
         if (AnomalyManager.Instance != null)
         {
             AnomalyManager.Instance.DeactivateAllAnomalies();
             AnomalyManager.Instance.ResetAnomalyTriggers();
         }
+        if (statue != null) statue.ResetStatue();
 
-        // 조각상 초기화
-        if (statue != null)
-        {
-            Debug.Log("조각상 리셋!");
-            statue.ResetStatue();
-        }
-        else
-        {
-            Debug.LogWarning("Statue가 GameManager에 연결되지 않았습니다!");
-        }
-
-        // ------------------------------------
-        // 모든 리셋 작업 후 LightTrigger 다시 활성화
-        // ------------------------------------
-        if (lightTrigger != null)
-        {
-            lightTrigger.gameObject.SetActive(true);
-        }
-
+        // 4. UI를 업데이트하고 새로운 이상현상을 설정합니다.
+        // (이 과정에서 특정 이상현상이 조명을 어둡게 만들 수 있습니다.)
         UpdateStageUI();
+        SetRandomAnomalies();
+
+        // ===================================================================
+        // BUG FIX: 모든 이상현상 설정이 끝난 후, 조명 상태를 '정상'으로 최종 확정합니다.
+        // ===================================================================
+        SetAnomalyLightState(false);
+
+        // 5. 모든 작업이 끝난 후 LightTrigger의 물리 감지를 다시 켭니다.
+        if (lightTriggerCollider != null)
+        {
+            lightTriggerCollider.enabled = true;
+        }
     }
 
     public void SetRandomAnomalies()
     {
-        anomaly = AnomalyManager.Instance.RandomizeAnomalies();
-        Debug.Log("이상현상 수: " + anomaly + " 스테이지: " + stage);
-        UpdateStageUI();
+        if (AnomalyManager.Instance != null)
+        {
+            anomaly = AnomalyManager.Instance.RandomizeAnomalies();
+            Debug.Log("이상현상 수: " + anomaly + " 스테이지: " + stage);
+            UpdateStageUI();
+        }
+        else
+        {
+            Debug.LogError("AnomalyManager 인스턴스가 없습니다!");
+        }
     }
 
     public void MoveToBackDoor()
     {
-        if (anomaly >= 1)
-            stage++;
-        else
-            stage = 1;
-
+        if (anomaly >= 1) stage++;
+        else stage = 1;
         ResetStage();
-        SetRandomAnomalies();
     }
 
     public void MoveToFrontDoor()
     {
-        if (anomaly >= 1)
-            stage = 1;
-        else
-            stage++;
-
+        if (anomaly >= 1) stage = 1;
+        else stage++;
         ResetStage();
-        SetRandomAnomalies();
     }
 }
