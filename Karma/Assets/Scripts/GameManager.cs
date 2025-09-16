@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections; // Coroutine을 사용하기 위해 추가
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class GameManager : MonoBehaviour
     public Transform spawnPoint;
     public int stage = 1;
     public int anomaly = 0;
+
+    [Header("UI")]
+    public TextMeshProUGUI worldStageText;
 
     public StatueController statue;
     public LightTrigger lightTrigger; // 인스펙터에서 연결 필수
@@ -36,7 +40,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // 씬이 바뀌어도 파괴되지 않게 하려면 DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -49,6 +53,15 @@ public class GameManager : MonoBehaviour
         ResetStage();
         SetRandomAnomalies();
     }
+
+    void UpdateStageUI()
+    {
+        if (worldStageText != null)
+        {
+            worldStageText.text = stage.ToString(); //stage를 문자열로 변환해서 텍스트로 표시 
+        }
+    }
+
 
     public void ResetStage()
     {
@@ -165,12 +178,15 @@ public class GameManager : MonoBehaviour
         {
             lightTrigger.gameObject.SetActive(true);
         }
+
+        UpdateStageUI();
     }
 
     public void SetRandomAnomalies()
     {
         anomaly = AnomalyManager.Instance.RandomizeAnomalies();
         Debug.Log("이상현상 수: " + anomaly + " 스테이지: " + stage);
+        UpdateStageUI();
     }
 
     public void MoveToBackDoor()
