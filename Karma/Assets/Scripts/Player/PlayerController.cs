@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // 달리지 않는 상태에서 3초가 지났으면 스태미나 회복
+            // 달리지 않는 상태에서 설정한 시간이 지났으면 스태미나 회복
             if (Time.time - lastRunTime >= recoveryDelay)
             {
                 currentStamina += staminaRecoveryRate * Time.deltaTime;
