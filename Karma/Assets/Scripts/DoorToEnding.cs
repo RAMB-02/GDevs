@@ -21,7 +21,6 @@ public class DoorToEnding : MonoBehaviour
         playerInRange = false;
         isFading = false;
 
-        // 페이드 이미지 초기화
         if (fadeImage != null)
         {
             Color c = fadeImage.color;
@@ -72,12 +71,19 @@ public class DoorToEnding : MonoBehaviour
         if (audioSource != null)
             audioSource.Play();
 
-        // 페이드 인
         if (fadeImage != null)
             yield return StartCoroutine(Fade(0f, 1f));
 
-        // 씬 전환
-        SceneManager.LoadScene("EndingScene");
+        // --- 여기가 핵심 변경 부분 ---
+        // NecklessScript의 static 변수를 확인하여 분기를 결정합니다.
+        if (NecklessScript.hasStolenNecklace)
+        {
+            SceneManager.LoadScene("BadEndingScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("EndingScene");
+        }
     }
 
     private IEnumerator Fade(float startAlpha, float endAlpha)
