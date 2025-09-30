@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private float currentStamina;
     private float lastRunTime;        // 마지막으로 달린 시간
     private bool isRunning = false;   // 현재 달리고 있는지 여부
+    private bool wantsToRun = false;
 
     // 스태미나 상태를 외부에서 확인할 수 있는 프로퍼티들
     public float CurrentStamina => currentStamina;
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDir = (transform.forward * v + transform.right * h).normalized;
 
         // 달리기 입력 확인 및 스태미나 체크
-        bool wantsToRun = Input.GetKey(KeyCode.LeftShift) && moveDir.magnitude > 0.1f;
+        wantsToRun = Input.GetKey(KeyCode.LeftShift) && moveDir.magnitude > 0.1f;
         bool canRun = currentStamina > 0f;
         
         // 실제로 달릴 수 있는지 결정
@@ -102,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleStamina()
     {
-        if (isRunning)
+        if (wantsToRun && currentStamina > 0) // 
         {
             // 달리는 중이면 스태미나 소모
             currentStamina -= staminaDrainRate * Time.deltaTime;
