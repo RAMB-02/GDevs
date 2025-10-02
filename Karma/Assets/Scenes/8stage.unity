@@ -32354,7 +32354,7 @@ GameObject:
   - component: {fileID: 796044779}
   - component: {fileID: 796044778}
   m_Layer: 0
-  m_Name: backDoor
+  m_Name: frontDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74847,7 +74847,7 @@ GameObject:
   - component: {fileID: 2104728857}
   - component: {fileID: 2104728856}
   m_Layer: 0
-  m_Name: frontDoor
+  m_Name: backDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

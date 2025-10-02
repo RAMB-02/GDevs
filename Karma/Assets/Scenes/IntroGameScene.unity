@@ -28070,7 +28070,7 @@ GameObject:
   - component: {fileID: 439370646}
   - component: {fileID: 439370643}
   m_Layer: 0
-  m_Name: backDoor
+  m_Name: frontDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

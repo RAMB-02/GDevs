@@ -102,12 +102,13 @@ public class DoorTriggerWithFade : MonoBehaviour
         if (fadeImage != null)
             yield return StartCoroutine(Fade(0f, 1f));
 
-        // --- ✅ 7스테이지에서 anomaly 조건 검사 ---
+        // --- ✅ 7스테이지에서 anomaly 조건 검사 (기능 교체됨) ---
         if (GameManager.Instance.stage == 7)
         {
+            // [수정됨] 이상 현상이 있을 때 Front가 정답, 없을 때 Back이 정답이 되도록 변경
             bool correctChoice =
-                (doorType == DoorType.Back && GameManager.Instance.anomaly >= 1) ||
-                (doorType == DoorType.Front && GameManager.Instance.anomaly == 0);
+                (doorType == DoorType.Front && GameManager.Instance.anomaly >= 1) ||
+                (doorType == DoorType.Back && GameManager.Instance.anomaly == 0);
 
             if (correctChoice)
             {
@@ -131,11 +132,12 @@ public class DoorTriggerWithFade : MonoBehaviour
         }
         else
         {
-            // --- 일반 문 이동 ---
+            // --- 일반 문 이동 (기능 교체됨) ---
+            // [수정됨] Back Door는 Front로, Front Door는 Back으로 이동하도록 변경
             if (doorType == DoorType.Back)
-                GameManager.Instance.MoveToBackDoor();
-            else
                 GameManager.Instance.MoveToFrontDoor();
+            else // doorType == DoorType.Front
+                GameManager.Instance.MoveToBackDoor();
         }
 
         if (fadeImage != null)
