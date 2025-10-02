@@ -22993,6 +22993,10 @@ PrefabInstance:
       value: Fern_C
       objectReference: {fileID: 0}
     - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
+      propertyPath: m_MotionVectors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027213193735674214, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
       propertyPath: m_RayTracingMode
       value: 0
       objectReference: {fileID: 0}
@@ -23180,6 +23184,10 @@ PrefabInstance:
     - target: {fileID: 8267427934229748759, guid: cce04f533c148314abf74aff71206ec7, type: 3}
       propertyPath: m_Name
       value: Heather_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8364043966977720213, guid: cce04f533c148314abf74aff71206ec7, type: 3}
       propertyPath: m_RayTracingMode
@@ -41536,7 +41544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1234513443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54118,11 +54126,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812313835}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1820789400 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1062002229270513266, guid: a7a42503aa1eecf4dbb9390ca28a1513, type: 3}
-  m_PrefabInstance: {fileID: 1951080074}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1820789401 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5706859049699012208, guid: a7a42503aa1eecf4dbb9390ca28a1513, type: 3}
@@ -82272,7 +82275,6 @@ GameObject:
   - component: {fileID: 966011786964130197}
   - component: {fileID: 5746836031827875860}
   - component: {fileID: 5327580597576131402}
-  - component: {fileID: 6317942557769104977}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -87525,20 +87527,6 @@ RectTransform:
   m_AnchoredPosition: {x: 28.126, y: 0}
   m_SizeDelta: {x: -13.7487, y: 13}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6317942557769104977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3771412288208044966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3356fb24e3346114fb8bb725cb6abb3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bloodScreenEffect: {fileID: 1820789400}
-  restartDelay: 3
 --- !u!1 &6318551466113000965
 GameObject:
   m_ObjectHideFlags: 0
@@ -89322,7 +89310,7 @@ GameObject:
   - component: {fileID: 1893269546757701271}
   - component: {fileID: 7735308369301280465}
   m_Layer: 0
-  m_Name: test_mummy3
+  m_Name: mummy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

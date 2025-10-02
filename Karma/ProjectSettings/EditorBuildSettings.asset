@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/StartMenuScene.unity
     guid: 6019b23cc6b519a45a5cffa1201ad4ea
   - enabled: 1
+    path: Assets/Scenes/Museum.unity
+    guid: a04f2263d417d4e4c801fb734ad6fb5f
+  - enabled: 1
     path: Assets/Scenes/IntroScene.unity
     guid: 36fb1899a96dfd34e9bd0514a73c8149
   - enabled: 1
@@ -32,6 +35,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BadEndingScene.unity
     guid: 5a24ec63573daf940a54d3e0e9f39a08
+  - enabled: 1
+    path: Assets/Scenes/Pawnshop.unity
+    guid: 2ef8729e1daa31b429fc62c9b2ac196f
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 35845fe01580c41289b024647b1d1c53, type: 3}
   m_UseUCBPForAssetBundles: 0
