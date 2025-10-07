@@ -82,7 +82,7 @@ public class DoorToEnding : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("EndingScene");
+            SceneManager.LoadScene("NormalEndingScene");
         }
     }
 

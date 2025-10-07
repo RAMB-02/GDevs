@@ -21,16 +21,19 @@ EditorBuildSettings:
     path: Assets/Scenes/IntroGameScene.unity
     guid: 37c2af914ea78014d959edca8952a74a
   - enabled: 1
+    path: Assets/Scenes/FirstMainGameScene.unity
+    guid: 129c714b3d6aa6e4a8c43aea3020e29b
+  - enabled: 1
     path: Assets/Scenes/MainGameScene.unity
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
   - enabled: 1
     path: Assets/Scenes/8stage.unity
     guid: 4e2e4816dd922b440a8c74fd10acfb95
   - enabled: 1
-    path: Assets/Scenes/EndingScene.unity
+    path: Assets/Scenes/NormalEndingScene.unity
     guid: b0f1435d9e91e94488516e12ba259191
   - enabled: 1
-    path: Assets/Scenes/EndingScene2.unity
+    path: Assets/Scenes/BadEndingScene2.unity
     guid: 5622e321f4d600f42912a0791bcc9b07
   - enabled: 1
     path: Assets/Scenes/BadEndingScene.unity

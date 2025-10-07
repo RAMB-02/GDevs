@@ -6,6 +6,10 @@ public class NecklessScript : MonoBehaviour
     // static 변수를 사용하여 게임 내 어디서든 이 값을 공유할 수 있습니다.
     public static bool hasStolenNecklace = false;
 
+    // ? 새로 추가된 신호 전달용 변수
+    public static bool playSoundOnNextSceneLoad = false;
+
+
     [Header("대상 오브젝트")]
     public GameObject necklaceObject;
 
