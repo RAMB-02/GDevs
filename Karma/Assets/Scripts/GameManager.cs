@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public Monster monster;
     public Mummy mummy;
     public MummyTrigger mummytrig;
+    public EyeController2D eyeController;
+    public PlayerDetection eyetrig;
     public ToiletTrigger toilettrigger;
 
     [Header("Settings")]
@@ -115,6 +117,12 @@ public class GameManager : MonoBehaviour
         if (mummy != null) mummy.MummyReset();
         if (mummytrig != null) mummytrig.OnEnable();
         if (toilettrigger != null) toilettrigger.OnEnable();
+        if (eyeController != null)
+        {
+            eyeController.StopTracking();
+            eyetrig.OnEnable();
+        }
+        
         if (AnomalyManager.Instance != null)
         {
             AnomalyManager.Instance.DeactivateAllAnomalies();
