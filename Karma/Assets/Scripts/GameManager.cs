@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public EyeController2D eyeController;
     public PlayerDetection eyetrig;
     public ToiletTrigger toilettrigger;
+    public StatueController statue; 
+    public OiioiCatController oiioiCat;
 
     [Header("Settings")]
     public Transform spawnPoint;
@@ -23,7 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI worldStageText;
 
-    public StatueController statue;
+    
     public LightTrigger lightTrigger;
 
     private Collider lightTriggerCollider;
@@ -129,6 +131,11 @@ public class GameManager : MonoBehaviour
             AnomalyManager.Instance.ResetAnomalyTriggers();
         }
         if (statue != null) statue.ResetStatue();
+        if (oiioiCat != null)
+        {
+            oiioiCat.ResetCat();
+        }
+
 
         // 4. UI를 업데이트하고 새로운 이상현상을 설정합니다.
         UpdateStageUI();
