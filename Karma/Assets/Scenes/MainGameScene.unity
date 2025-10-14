@@ -75610,7 +75610,7 @@ MonoBehaviour:
   - {fileID: 1089195680}
   - {fileID: 1878742059}
   - {fileID: 157756745}
-  activationChance: 1
+  activationChance: 0.1
 --- !u!43 &2096835150
 Mesh:
   m_ObjectHideFlags: 0
@@ -87139,7 +87139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2216343889452968805}
-  chaseRange: 100
+  chaseRange: 13
   moveSound: {fileID: 6274335245384808195}
   spawnPoint: {fileID: 985457304}
 --- !u!114 &5746836031827875860
