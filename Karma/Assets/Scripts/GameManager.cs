@@ -1,6 +1,5 @@
-// GameManager.cs
-
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 
@@ -8,13 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public BathroomLight bathroomLight;
     public Monster monster;
     public Mummy mummy;
     public MummyTrigger mummytrig;
     public EyeController2D eyeController;
     public PlayerDetection eyetrig;
     public ToiletTrigger toilettrigger;
-    public StatueController statue; 
+    public StatueController statue;
     public OiioiCatController oiioiCat;
 
     [Header("Settings")]
@@ -24,23 +24,14 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI worldStageText;
+    [Tooltip("화면을 어둡게 만들 검은색 UI Image")]
+    public Image fadePanel;
+    [Tooltip("화면이 어두워지거나 밝아지는 데 걸리는 시간")]
+    public float fadeDuration = 0.5f;
 
-    
     public LightTrigger lightTrigger;
-
     private Collider lightTriggerCollider;
-
-    public void SetAnomalyLightState(bool isAnomaly)
-    {
-        if (LightManager.Instance != null)
-        {
-            LightManager.Instance.SetAnomalyLights(isAnomaly);
-        }
-        else
-        {
-            Debug.LogError("LightManager 인스턴스를 찾을 수 없습니다.");
-        }
-    }
+    private bool isResetting = false;
 
     private void Awake()
     {
@@ -61,7 +52,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (fadePanel != null)
+        {
+            fadePanel.color = new Color(0, 0, 0, 0);
+            fadePanel.gameObject.SetActive(false);
+        }
         ResetStage();
+    }
+
+    public void SetAnomalyLightState(bool isAnomaly)
+    {
+        if (LightManager.Instance != null)
+        {
+            LightManager.Instance.SetAnomalyLights(isAnomaly);
+        }
+        else
+        {
+            Debug.LogError("LightManager 인스턴스를 찾을 수 없습니다.");
+        }
     }
 
     void UpdateStageUI()
@@ -72,15 +80,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ResetStage()
+    // ✨ [수정 1] ResetStage 함수가 bool 타입의 파라미터를 받도록 변경합니다.
+    // withFade = true는 기본값으로, 파라미터 없이 호출되면 무조건 페이드 효과를 실행합니다.
+    public void ResetStage(bool withFade = true)
     {
-        // 1. LightTrigger의 물리 감지를 먼저 끕니다.
-        if (lightTriggerCollider != null)
-        {
-            lightTriggerCollider.enabled = false;
-        }
+        if (isResetting) return;
 
-        // 2. 플레이어 위치를 리셋합니다.
+        // withFade 값에 따라 페이드 효과를 실행할지, 바로 리셋할지 결정합니다.
+        if (withFade)
+        {
+            StartCoroutine(ResetStageWithFade());
+        }
+        else
+        {
+            // 페이드가 필요 없는 경우, 리셋 로직만 바로 실행합니다.
+            ResetStageLogic();
+        }
+    }
+
+    private IEnumerator ResetStageWithFade()
+    {
+        isResetting = true;
+        yield return StartCoroutine(FadeToBlack());
+        ResetStageLogic();
+        yield return StartCoroutine(FadeToClear());
+        isResetting = false;
+    }
+
+    private void ResetStageLogic()
+    {
+        if (lightTriggerCollider != null) lightTriggerCollider.enabled = false;
+
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
@@ -104,16 +134,12 @@ public class GameManager : MonoBehaviour
             Debug.Log("플레이어 위치 리셋 완료");
         }
 
-        // --- ✅ [수정] 모든 LightOnOff 트리거를 찾아 리셋하는 코드 추가 ---
-        // 씬에 있는 모든 LightOnOff 스크립트를 찾아서 강제로 초기화시킵니다.
-        // 이것이 깜빡이던 조명을 원래 상태로 되돌리는 핵심 코드입니다.
         LightOnOff[] lightBlinkers = FindObjectsOfType<LightOnOff>();
         foreach (LightOnOff blinker in lightBlinkers)
         {
             blinker.ResetBlinking();
         }
 
-        // 3. 몬스터 및 다른 트리거들을 리셋합니다.
         if (lightTrigger != null) lightTrigger.ResetTrigger();
         if (monster != null) monster.ResetToInitialPosition();
         if (mummy != null) mummy.MummyReset();
@@ -124,7 +150,7 @@ public class GameManager : MonoBehaviour
             eyeController.StopTracking();
             eyetrig.OnEnable();
         }
-        
+
         if (AnomalyManager.Instance != null)
         {
             AnomalyManager.Instance.DeactivateAllAnomalies();
@@ -136,19 +162,16 @@ public class GameManager : MonoBehaviour
             oiioiCat.ResetCat();
         }
 
-
-        // 4. UI를 업데이트하고 새로운 이상현상을 설정합니다.
         UpdateStageUI();
         SetRandomAnomalies();
-
-        // BUG FIX: 모든 이상현상 설정이 끝난 후, 조명 상태를 '정상'으로 최종 확정합니다.
         SetAnomalyLightState(false);
 
-        // 5. 모든 작업이 끝난 후 LightTrigger의 물리 감지를 다시 켭니다.
-        if (lightTriggerCollider != null)
+        if (bathroomLight != null)
         {
-            lightTriggerCollider.enabled = true;
+            bathroomLight.ResetLights();
         }
+
+        if (lightTriggerCollider != null) lightTriggerCollider.enabled = true;
     }
 
     public void SetRandomAnomalies()
@@ -165,17 +188,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ✨ [수정 2] 문 이동 시에는 페이드가 필요 없으므로 ResetStage(false)를 호출합니다.
     public void MoveToBackDoor()
     {
         if (anomaly >= 1) stage++;
         else stage = 1;
-        ResetStage();
+        ResetStage(false);
     }
 
+    // ✨ [수정 3] 문 이동 시에는 페이드가 필요 없으므로 ResetStage(false)를 호출합니다.
     public void MoveToFrontDoor()
     {
         if (anomaly >= 1) stage = 1;
         else stage++;
-        ResetStage();
+        ResetStage(false);
+    }
+
+    private IEnumerator FadeToBlack()
+    {
+        if (fadePanel == null) yield break;
+        fadePanel.gameObject.SetActive(true);
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            fadePanel.color = new Color(0, 0, 0, Mathf.Clamp01(elapsedTime / fadeDuration));
+            yield return null;
+        }
+        fadePanel.color = new Color(0, 0, 0, 1);
+    }
+
+    private IEnumerator FadeToClear()
+    {
+        if (fadePanel == null) yield break;
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            fadePanel.color = new Color(0, 0, 0, 1f - Mathf.Clamp01(elapsedTime / fadeDuration));
+            yield return null;
+        }
+        fadePanel.color = new Color(0, 0, 0, 0);
+        fadePanel.gameObject.SetActive(false);
     }
 }

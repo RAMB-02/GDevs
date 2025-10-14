@@ -1,25 +1,46 @@
 using UnityEngine;
-using TMPro; // UI 텍스트를 사용하기 위해 추가
+using TMPro;
+using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class DeathButton : MonoBehaviour
 {
-    [Tooltip("플레이어가 상호작용할 수 있는 최대 거리")]
+    [Header("상호작용 설정")]
     public float interactionDistance = 3f;
-
-    [Tooltip("상호작용 안내 UI 텍스트")]
     public TextMeshProUGUI interactionText;
+    public string promptMessage = "E를 눌러 버튼을 누르시겠습니까?";
 
-    // [핵심 변경점] 인스펙터에서 설정할 수 있는 안내 문구 변수 추가
-    [Tooltip("플레이어가 범위 안에 있을 때 표시될 안내 문구")]
-    public string promptMessage = "E를 눌러 버튼을 누르시겠습니까?"; // 기본값 설정
+    [Tooltip("버튼을 누른 후 다시 누를 수 있을 때까지의 대기 시간(초)")]
+    public float cooldownTime = 3.0f;
+
+    [Header("오디오 설정")]
+    public AudioClip soundA;
+    public AudioClip soundB;
+    public AudioClip soundC;
+    public AudioClip soundD;
 
     private bool isPlayerInRange = false;
+    private bool isSequenceRunning = false;
     private Transform playerTransform;
+    private AudioSource audioSource;
+
+    // ✨ [수정] OnEnable 함수를 추가합니다.
+    // 이 스크립트(또는 오브젝트)가 활성화될 때마다 호출됩니다.
+    private void OnEnable()
+    {
+        // 버튼이 활성화될 때, 쿨타임 상태를 강제로 초기화하여
+        // 이전에 코루틴이 멈춰서 발생했던 문제를 해결합니다.
+        isSequenceRunning = false;
+        Debug.Log("DeathButton 활성화됨. 상태 초기화.");
+    }
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Start()
     {
-        // 시작할 때 플레이어의 Transform을 찾아 저장해둡니다.
-        // 이 코드는 GameManager의 Awake() 이후에 실행되는 것이 좋으므로 Start()에 둡니다.
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
@@ -27,10 +48,9 @@ public class DeathButton : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Player 태그를 가진 오브젝트를 찾을 수 없습니다! Player 오브젝트에 'Player' 태그가 있는지 확인해주세요.");
+            Debug.LogError("'Player' 태그를 가진 오브젝트를 찾을 수 없습니다!");
         }
 
-        // 시작 시 안내 텍스트를 비활성화합니다. (보통 UI는 처음에 꺼져있습니다.)
         if (interactionText != null)
         {
             interactionText.gameObject.SetActive(false);
@@ -39,67 +59,87 @@ public class DeathButton : MonoBehaviour
 
     void Update()
     {
-        // 플레이어를 찾지 못했으면 더 이상 진행하지 않습니다.
         if (playerTransform == null) return;
-
-        // 플레이어와 버튼 사이의 거리를 계산합니다.
         float distance = Vector3.Distance(transform.position, playerTransform.position);
 
-        // 플레이어가 상호작용 가능한 거리 안에 있는지 확인합니다.
-        if (distance <= interactionDistance)
+        if (distance <= interactionDistance && !isSequenceRunning)
         {
             isPlayerInRange = true;
-            
-            // [핵심 변경점] 인스펙터 변수(promptMessage)의 내용을 텍스트 UI에 표시
             if (interactionText != null)
             {
-                interactionText.text = promptMessage; // 이제 인스펙터에서 설정한 값이 표시됩니다.
-                if (!interactionText.gameObject.activeSelf) // 이미 활성화되어 있으면 다시 활성화할 필요 없음
-                {
-                    interactionText.gameObject.SetActive(true);
-                }
+                interactionText.text = promptMessage;
+                interactionText.gameObject.SetActive(true);
             }
         }
-        else // 플레이어가 범위 밖으로 나갔을 때
+        else
         {
             isPlayerInRange = false;
-            // 거리가 멀어지면 안내 텍스트를 비활성화합니다.
-            if (interactionText != null && interactionText.gameObject.activeSelf)
+            if (interactionText != null)
             {
                 interactionText.gameObject.SetActive(false);
             }
         }
 
-        // 플레이어가 범위 안에 있고 'E' 키를 눌렀을 때
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
+        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E) && !isSequenceRunning)
         {
             PressButton();
         }
     }
 
-    // 버튼이 눌렸을 때 실행될 함수
     private void PressButton()
     {
-        Debug.Log("버튼이 눌렸습니다! 플레이어가 죽습니다.");
+        isSequenceRunning = true;
+        if (interactionText != null)
+        {
+            interactionText.gameObject.SetActive(false);
+        }
 
-        // GameManager의 ResetStage 함수를 호출하여 플레이어를 리셋(죽음 처리)
+        StartCoroutine(DeathSequenceCoroutine());
+        StartCoroutine(CooldownCoroutine());
+    }
+
+    private IEnumerator DeathSequenceCoroutine()
+    {
+        Debug.Log("버튼 시퀀스 시작!");
+
+        PlaySound(soundA, "'a' 소리 재생");
+        PlaySound(soundB, "'b' 소리 재생");
+
+        yield return new WaitForSeconds(1.2f);
+
+        Debug.Log("1.2초 경과. 'c', 'd' 소리 재생.");
+        PlaySound(soundC, "'c' 소리 재생");
+        PlaySound(soundD, "'d' 소리 재생");
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.ResetStage();
         }
         else
         {
-            Debug.LogError("GameManager 인스턴스를 찾을 수 없습니다! GameManager 오브젝트가 씬에 있고 'GameManager' 스크립트가 붙어있는지 확인해주세요.");
+            Debug.LogError("GameManager 인스턴스를 찾을 수 없습니다!");
         }
     }
 
-    // (에디터용) 상호작용 범위를 시각적으로 보여주기 위한 기즈모
+    private IEnumerator CooldownCoroutine()
+    {
+        yield return new WaitForSeconds(cooldownTime);
+        isSequenceRunning = false;
+        Debug.Log("버튼 쿨타임 종료. 다시 사용 가능.");
+    }
+
+    private void PlaySound(AudioClip clip, string debugMessage)
+    {
+        if (clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+            Debug.Log(debugMessage);
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
-        if (transform != null) // 에디터에서 오브젝트가 선택 해제될 때 오류 방지
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, interactionDistance);
-        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionDistance);
     }
 }

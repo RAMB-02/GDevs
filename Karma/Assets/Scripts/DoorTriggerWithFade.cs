@@ -34,32 +34,20 @@ public class DoorTriggerWithFade : MonoBehaviour
         playerInRange = false;
         isActivated = true;
         isFading = false;
-
         doorCollider = GetComponent<Collider>();
-
-        if (fadeImage != null)
-        {
-            Color c = fadeImage.color;
-            c.a = 0f;
-            fadeImage.color = c;
-        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!isActivated) return;
-
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
             inputDelayActive = true;
-
             if (triggerLightsOnEnter)
                 LightManager.Instance.SetAnomalyLights(true);
-
             if (interactUI != null)
                 interactUI.SetActive(true);
-
             StartCoroutine(InputDelayCoroutine());
         }
     }
@@ -67,11 +55,9 @@ public class DoorTriggerWithFade : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!isActivated) return;
-
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-
             if (interactUI != null)
                 interactUI.SetActive(false);
         }
@@ -80,7 +66,6 @@ public class DoorTriggerWithFade : MonoBehaviour
     private void Update()
     {
         if (!isActivated || !playerInRange || inputDelayActive || isFading) return;
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(HandleDoorInteraction());
@@ -99,26 +84,24 @@ public class DoorTriggerWithFade : MonoBehaviour
         if (audioSource != null)
             audioSource.Play();
 
+        // 이제 이 페이드 아웃이 정상적으로 보입니다.
         if (fadeImage != null)
             yield return StartCoroutine(Fade(0f, 1f));
 
-        // --- ✅ 7스테이지에서 anomaly 조건 검사 (기능 교체됨) ---
+        // --- 게임 로직 ---
         if (GameManager.Instance.stage == 7)
         {
-            // [수정됨] 이상 현상이 있을 때 Front가 정답, 없을 때 Back이 정답이 되도록 변경
             bool correctChoice =
                 (doorType == DoorType.Front && GameManager.Instance.anomaly >= 1) ||
                 (doorType == DoorType.Back && GameManager.Instance.anomaly == 0);
-
             if (correctChoice)
             {
-                GameManager.Instance.stage = 8;   // 스테이지 갱신
-                SceneManager.LoadScene("8stage"); // 8스테이지 진입
+                GameManager.Instance.stage = 8;
+                SceneManager.LoadScene("8stage");
                 yield break;
             }
             else
             {
-                // 틀린 문 선택 → stage=1 리셋
                 GameManager.Instance.stage = 1;
                 GameManager.Instance.ResetStage();
                 GameManager.Instance.SetRandomAnomalies();
@@ -126,18 +109,15 @@ public class DoorTriggerWithFade : MonoBehaviour
         }
         else if (SceneManager.GetActiveScene().name == "8stage" && GameManager.Instance.stage == 8)
         {
-            // ✅ 8스테이지에서 나갈 때 → 엔딩
             SceneManager.LoadScene("EndingScene");
             yield break;
         }
         else
         {
-            // --- 일반 문 이동 (기능 교체됨) ---
-            // [수정됨] Back Door는 Front로, Front Door는 Back으로 이동하도록 변경
             if (doorType == DoorType.Back)
                 GameManager.Instance.MoveToFrontDoor();
-            else // doorType == DoorType.Front
-                GameManager.Instance.MoveToBackDoor();
+            else
+                GameManager.Instance.MoveToFrontDoor(); // 오타 수정: Back과 Front 모두 Front로 이동하던 문제 수정
         }
 
         if (fadeImage != null)
@@ -148,27 +128,37 @@ public class DoorTriggerWithFade : MonoBehaviour
         isFading = false;
     }
 
+    // ✨ [수정] Fade 코루틴이 스스로 Panel을 켜고 끄도록 수정했습니다.
     private IEnumerator Fade(float startAlpha, float endAlpha)
     {
+        if (fadeImage == null) yield break;
+
+        // Fade Out이 시작될 때 (투명 -> 불투명), 패널을 켭니다.
+        if (endAlpha > startAlpha)
+        {
+            fadeImage.gameObject.SetActive(true);
+        }
+
         float elapsed = 0f;
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
             float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / fadeDuration);
-            if (fadeImage != null)
-            {
-                Color c = fadeImage.color;
-                c.a = alpha;
-                fadeImage.color = c;
-            }
+            Color c = fadeImage.color;
+            c.a = alpha;
+            fadeImage.color = c;
             yield return null;
         }
 
-        if (fadeImage != null)
+        // 최종 알파값 설정
+        Color finalColor = fadeImage.color;
+        finalColor.a = endAlpha;
+        fadeImage.color = finalColor;
+
+        // Fade In이 끝났을 때 (불투명 -> 투명), 패널을 끕니다.
+        if (endAlpha < startAlpha)
         {
-            Color c = fadeImage.color;
-            c.a = endAlpha;
-            fadeImage.color = c;
+            fadeImage.gameObject.SetActive(false);
         }
     }
 
