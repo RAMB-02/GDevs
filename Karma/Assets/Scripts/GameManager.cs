@@ -5,8 +5,8 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    // ... (기존 변수들은 모두 동일)
     public static GameManager Instance;
-
     public BathroomLight bathroomLight;
     public Monster monster;
     public Mummy mummy;
@@ -24,15 +24,14 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI worldStageText;
-    [Tooltip("화면을 어둡게 만들 검은색 UI Image")]
     public Image fadePanel;
-    [Tooltip("화면이 어두워지거나 밝아지는 데 걸리는 시간")]
     public float fadeDuration = 0.5f;
 
     public LightTrigger lightTrigger;
     private Collider lightTriggerCollider;
     private bool isResetting = false;
 
+    // ... (Awake, Start, SetAnomalyLightState, UpdateStageUI, ResetStage, ResetStageWithFade 함수는 모두 동일)
     private void Awake()
     {
         if (Instance == null)
@@ -80,20 +79,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ✨ [수정 1] ResetStage 함수가 bool 타입의 파라미터를 받도록 변경합니다.
-    // withFade = true는 기본값으로, 파라미터 없이 호출되면 무조건 페이드 효과를 실행합니다.
     public void ResetStage(bool withFade = true)
     {
         if (isResetting) return;
 
-        // withFade 값에 따라 페이드 효과를 실행할지, 바로 리셋할지 결정합니다.
         if (withFade)
         {
             StartCoroutine(ResetStageWithFade());
         }
         else
         {
-            // 페이드가 필요 없는 경우, 리셋 로직만 바로 실행합니다.
             ResetStageLogic();
         }
     }
@@ -110,6 +105,15 @@ public class GameManager : MonoBehaviour
     private void ResetStageLogic()
     {
         if (lightTriggerCollider != null) lightTriggerCollider.enabled = false;
+
+        // ✨ [수정] 씬에 있는 모든 SoundTrigger를 찾아서 리셋하는 로직 추가
+        SoundTrigger[] soundTriggers = FindObjectsOfType<SoundTrigger>();
+        foreach (SoundTrigger trigger in soundTriggers)
+        {
+            trigger.ResetTrigger();
+        }
+        Debug.Log($"씬에 있는 {soundTriggers.Length}개의 SoundTrigger를 리셋했습니다.");
+
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
@@ -174,6 +178,7 @@ public class GameManager : MonoBehaviour
         if (lightTriggerCollider != null) lightTriggerCollider.enabled = true;
     }
 
+    // ... (나머지 함수들은 모두 동일)
     public void SetRandomAnomalies()
     {
         if (AnomalyManager.Instance != null)
@@ -188,7 +193,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ✨ [수정 2] 문 이동 시에는 페이드가 필요 없으므로 ResetStage(false)를 호출합니다.
     public void MoveToBackDoor()
     {
         if (anomaly >= 1) stage++;
@@ -196,7 +200,6 @@ public class GameManager : MonoBehaviour
         ResetStage(false);
     }
 
-    // ✨ [수정 3] 문 이동 시에는 페이드가 필요 없으므로 ResetStage(false)를 호출합니다.
     public void MoveToFrontDoor()
     {
         if (anomaly >= 1) stage = 1;

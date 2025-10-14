@@ -24,12 +24,8 @@ public class DeathButton : MonoBehaviour
     private Transform playerTransform;
     private AudioSource audioSource;
 
-    // ✨ [수정] OnEnable 함수를 추가합니다.
-    // 이 스크립트(또는 오브젝트)가 활성화될 때마다 호출됩니다.
     private void OnEnable()
     {
-        // 버튼이 활성화될 때, 쿨타임 상태를 강제로 초기화하여
-        // 이전에 코루틴이 멈춰서 발생했던 문제를 해결합니다.
         isSequenceRunning = false;
         Debug.Log("DeathButton 활성화됨. 상태 초기화.");
     }
@@ -113,6 +109,9 @@ public class DeathButton : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
+            // ✨ [수정] 리셋을 호출하기 전에, 스테이지를 1로 설정하는 코드를 추가합니다.
+            Debug.Log($"현재 스테이지: {GameManager.Instance.stage} -> 1로 변경합니다.");
+            GameManager.Instance.stage = 1;
             GameManager.Instance.ResetStage();
         }
         else

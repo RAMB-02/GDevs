@@ -84,7 +84,6 @@ public class DoorTriggerWithFade : MonoBehaviour
         if (audioSource != null)
             audioSource.Play();
 
-        // 이제 이 페이드 아웃이 정상적으로 보입니다.
         if (fadeImage != null)
             yield return StartCoroutine(Fade(0f, 1f));
 
@@ -115,9 +114,14 @@ public class DoorTriggerWithFade : MonoBehaviour
         else
         {
             if (doorType == DoorType.Back)
+            {
                 GameManager.Instance.MoveToFrontDoor();
-            else
-                GameManager.Instance.MoveToFrontDoor(); // 오타 수정: Back과 Front 모두 Front로 이동하던 문제 수정
+            }
+            else // doorType == DoorType.Front
+            {
+                // ✨ [수정] Front 문을 열었을 때 MoveToBackDoor()가 호출되도록 수정했습니다.
+                GameManager.Instance.MoveToBackDoor();
+            }
         }
 
         if (fadeImage != null)
@@ -128,12 +132,10 @@ public class DoorTriggerWithFade : MonoBehaviour
         isFading = false;
     }
 
-    // ✨ [수정] Fade 코루틴이 스스로 Panel을 켜고 끄도록 수정했습니다.
     private IEnumerator Fade(float startAlpha, float endAlpha)
     {
         if (fadeImage == null) yield break;
 
-        // Fade Out이 시작될 때 (투명 -> 불투명), 패널을 켭니다.
         if (endAlpha > startAlpha)
         {
             fadeImage.gameObject.SetActive(true);
@@ -150,12 +152,10 @@ public class DoorTriggerWithFade : MonoBehaviour
             yield return null;
         }
 
-        // 최종 알파값 설정
         Color finalColor = fadeImage.color;
         finalColor.a = endAlpha;
         fadeImage.color = finalColor;
 
-        // Fade In이 끝났을 때 (불투명 -> 투명), 패널을 끕니다.
         if (endAlpha < startAlpha)
         {
             fadeImage.gameObject.SetActive(false);
