@@ -85785,9 +85785,9 @@ MonoBehaviour:
   jumpForce: 3.5
   gravity: 9.81
   maxStamina: 120
-  staminaDrainRate: 20
-  staminaRecoveryRate: 60
-  recoveryDelay: 0.5
+  staminaDrainRate: 30
+  staminaRecoveryRate: 10
+  exhaustionCooldown: 2
 --- !u!1 &6824127258021233977
 GameObject:
   m_ObjectHideFlags: 0

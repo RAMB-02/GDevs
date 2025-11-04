@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public float maxStamina = 120f;           // 최대 스태미나
     public float staminaDrainRate = 20f;      // 초당 스태미나 소모량
     public float staminaRecoveryRate = 60f;   // 초당 스태미나 회복량
-    public float recoveryDelay = 0.5f;          // 회복 시작 전 대기시간 (초)
+    public float exhaustionCooldown = 2.0f;
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -28,9 +28,10 @@ public class PlayerController : MonoBehaviour
 
     // 스태미나 관련 변수들
     private float currentStamina;
-    private float lastRunTime;        // 마지막으로 달린 시간
     private bool isRunning = false;   // 현재 달리고 있는지 여부
     private bool wantsToRun = false;
+    private bool isExhausted = false; 
+    private float exhaustionTimer = 0f; 
 
     // 스태미나 상태를 외부에서 확인할 수 있는 프로퍼티들
     public float CurrentStamina => currentStamina;
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
         // 달리기 입력 확인 및 스태미나 체크
         wantsToRun = Input.GetKey(KeyCode.LeftShift) && moveDir.magnitude > 0.1f;
-        bool canRun = currentStamina > 0f;
+        bool canRun = currentStamina > 0f && !isExhausted;
         
         // 실제로 달릴 수 있는지 결정
         isRunning = wantsToRun && canRun && isGrounded;
@@ -103,21 +104,40 @@ public class PlayerController : MonoBehaviour
 
     private void HandleStamina()
     {
-        if (wantsToRun && currentStamina > 0) // 
+        // 1. 고갈(Exhausted) 상태 타이머 관리
+        if (isExhausted)
         {
-            // 달리는 중이면 스태미나 소모
+            // 타이머 시간 감소
+            exhaustionTimer -= Time.deltaTime;
+            if (exhaustionTimer <= 0f)
+            {
+                isExhausted = false; // 고갈 상태 해제
+            }
+        }
+
+        // 2. 스태미나 소모 조건
+        
+        bool canDrain = wantsToRun && !isExhausted && currentStamina > 0;
+
+        if (canDrain)
+        {
+            // 스태미나 소모
             currentStamina -= staminaDrainRate * Time.deltaTime;
-            currentStamina = Mathf.Max(0f, currentStamina); // 0 이하로 내려가지 않도록
-            lastRunTime = Time.time; // 마지막 달린 시간 업데이트
+
+            // 방금 스태미나를 0까지 다 썼는지 체크
+            if (currentStamina <= 0f)
+            {
+                currentStamina = 0f;
+                isExhausted = true; // 고갈 상태 시작!
+                exhaustionTimer = exhaustionCooldown; // 2초 타이머 설정
+            }
         }
         else
         {
-            // 달리지 않는 상태에서 설정한 시간이 지났으면 스태미나 회복
-            if (Time.time - lastRunTime >= recoveryDelay)
-            {
-                currentStamina += staminaRecoveryRate * Time.deltaTime;
-                currentStamina = Mathf.Min(maxStamina, currentStamina); // 최대치를 넘지 않도록
-            }
+            // 3. 스태미나 회복 (소모 중이 아닐 때)
+            
+            currentStamina += staminaRecoveryRate * Time.deltaTime;
+            currentStamina = Mathf.Min(maxStamina, currentStamina); 
         }
     }
     // 스태미나를 특정 값으로 설정하는 메서드 (필요시 사용)
