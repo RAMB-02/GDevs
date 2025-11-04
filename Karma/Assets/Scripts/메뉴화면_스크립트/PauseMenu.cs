@@ -13,6 +13,9 @@ public class PauseMenu : MonoBehaviour
 
     public SettingsPanelController settingsPanelController; // ★★★ 인스펙터에서 설정 패널 오브젝트 연결 ★★★
 
+    // ▼▼▼ 1. 'How To Play' 패널 참조 변수 추가 ▼▼▼
+    public GameObject howToPlayPanel; // ★★★ 인스펙터에서 'How To Play' 패널 오브젝트 연결 ★★★
+
     void Awake()
     {
         // 게임 씬이 로드될 때 일시정지 메뉴는 기본적으로 비활성화
@@ -27,16 +30,14 @@ public class PauseMenu : MonoBehaviour
             settingsPanelController.gameObject.SetActive(false);
             Debug.Log("PauseMenu.Awake: SettingsPanelController's GameObject has been deactivated.");
         }
-        // else if (settingsPanelController == null) // 이 로그는 OnClickSettings 등에서 이미 처리 중
-        // {
-        //     Debug.LogError("PauseMenu.Awake: settingsPanelController is not assigned in the Inspector!");
-        // }
+        
+        // ▼▼▼ 2. 'How To Play' 패널도 시작 시 비활성화 ▼▼▼
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(false);
+        }
+        // ▲▲▲
 
-
-        // isPaused와 Time.timeScale은 게임 씬 진입 시 StartMenu나 다른 로직에서 이미 정상화되었을 것으로 가정
-        // 만약 이 씬에서 바로 시작하는 경우를 대비하려면 여기서도 초기화 필요
-        // isPaused = false; // StartMenu.cs의 Start()에서 이미 처리하고 있음
-        // Time.timeScale = 1f; // StartMenu.cs의 Start()에서 이미 처리하고 있음
         SetCursorState(false); // 게임 플레이 중에는 커서 잠금/숨김
     }
 
@@ -44,14 +45,22 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // 설정 패널이 열려있을 때는 PauseMenu가 직접 ESC를 처리하지 않고,
-            // SettingsPanelController의 자체 닫기 로직(있다면) 또는 여기서 닫아주고 PauseMenu로 돌아오게 함.
+            // 설정 패널이 열려있으면 닫기
             if (settingsPanelController != null && settingsPanelController.gameObject.activeInHierarchy)
             {
                 settingsPanelController.OnClickCloseButton(); // 설정 패널의 닫기 함수 호출
                 return; // PauseMenu 토글 로직 실행 안함
             }
 
+            // ▼▼▼ 3. 'How To Play' 패널이 열려있으면 닫기 (Update에 추가) ▼▼▼
+            if (howToPlayPanel != null && howToPlayPanel.activeInHierarchy)
+            {
+                OnClickCloseHowToPlayPanel(); // 'How To Play' 패널 닫기
+                return;
+            }
+            // ▲▲▲
+
+            // (위의 패널들이 모두 닫혀있을 때)
             if (isPaused)
             {
                 ResumeGame();
@@ -78,6 +87,12 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        // howToPlayPanel이 열려있을 수 있으므로 Resume 시 강제로 닫아줌
+        if (howToPlayPanel != null && howToPlayPanel.activeInHierarchy)
+        {
+            howToPlayPanel.SetActive(false);
+        }
+        
         if (pauseMenuPanel != null && pauseMenuPanel.activeInHierarchy) pauseMenuPanel.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false; 
@@ -122,11 +137,47 @@ public class PauseMenu : MonoBehaviour
         SetCursorState(true); // 일시정지 메뉴이므로 커서 다시 보이기
     }
 
+    // ▼▼▼ 4. OnClickRestart() 함수를 주석 처리 (또는 삭제) ▼▼▼
+    /*
     public void OnClickRestart()
     {
         ResumeGame(); 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    */
+    // ▲▲▲
+
+    // ▼▼▼ 5. 'How To Play' 관련 함수 2개 추가 ▼▼▼
+    
+    /**
+     * 'How To Play' 버튼 클릭 시 호출됩니다.
+     */
+    public void OnClickHow()
+    {
+        Debug.Log("PauseMenu: How To Play button clicked");
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("PauseMenu: HowToPlayPanel is not assigned!");
+        }
+    }
+
+    /**
+     * 'How To Play' 패널의 닫기 버튼 또는 ESC 키로 호출됩니다.
+     */
+    public void OnClickCloseHowToPlayPanel()
+    {
+        Debug.Log("PauseMenu: Close How To Play panel button clicked");
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(false);
+        }
+    }
+    // ▲▲▲
+
 
     public void OnClickMainMenu()
     {

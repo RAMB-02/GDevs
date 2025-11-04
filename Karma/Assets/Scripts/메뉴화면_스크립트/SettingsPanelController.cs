@@ -60,7 +60,17 @@ public class SettingsPanelController : MonoBehaviour
             Debug.LogWarning("SettingsPanelController: Global Volume is not assigned. HDRP Brightness control will not work.", gameObject);
         }
 
-        // SetupAllListeners() 코드를 제거하거나 비활성화
+        if (resolutionDropdown != null)
+        {
+            resolutionDropdown.onValueChanged.RemoveAllListeners(); // 중복 방지
+            resolutionDropdown.onValueChanged.AddListener(SetResolution);
+        }
+        
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.onValueChanged.RemoveAllListeners(); // 중복 방지
+            fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
+        }
     }
 
     void OnEnable()
